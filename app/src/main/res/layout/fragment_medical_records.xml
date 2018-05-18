@@ -1,0 +1,456 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.oodi.godsendapp.fragment.profile.MedicalRecordsFragment">
+
+    <include
+        android:id="@+id/i1"
+        layout="@layout/common_header" />
+    <ScrollView
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/sv"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:text="Enter vital health informations"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/hgt"
+                    android:layout_weight="1"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:hint="Height"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:singleLine="true"
+                    android:textSize="15sp"
+                    android:background="@drawable/edittext_bg"
+                    android:layout_marginRight="8dp"/>
+
+                <EditText
+                    android:id="@+id/wgt"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:hint="Weight"
+                    android:textSize="15sp"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:singleLine="true"
+                    android:background="@drawable/edittext_bg"/>
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:hint="Blood Group"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:singleLine="true"
+                    android:background="@drawable/edittext_bg"
+                    android:prompt="@string/spinner_title"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:background="@drawable/edittext_bg"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edtRecords"
+                    android:background="@null"
+                    android:textSize="16sp"
+                    android:hint="  Attach Medical Records"
+                    android:textColor="@color/black"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/attachfile"
+                    android:padding="13dp"
+                    android:src="@drawable/ic_attachment"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="206dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_marginTop="2dp"
+                    android:text="Medical Conditions"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/txtAddmore"
+                    android:src="@drawable/addmore30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+            <GridLayout
+                android:id="@+id/GridLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:rowCount="2"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:orientation="horizontal"
+                tools:context="com.oodi.godsendapp.fragment.profile.MedicalRecordsFragment">
+
+                <EditText
+                    android:id="@+id/EdtHsp11"
+                    android:layout_gravity="left|top"
+                    android:hint="Diabetes"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+
+                <EditText
+                    android:id="@+id/EdtHsp22"
+                    android:layout_gravity="left|top"
+                    android:hint="Diabetes"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:visibility="gone"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+
+                <EditText
+                    android:id="@+id/EdtHsp33"
+                    android:layout_gravity="left|top"
+                    android:hint="Diabetes"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:visibility="gone"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+
+                <EditText
+                    android:id="@+id/EdtHsp44"
+                    android:layout_gravity="left|top"
+                    android:hint="Diabetes"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:visibility="gone"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+                <EditText
+                    android:id="@+id/EdtHsp55"
+                    android:layout_gravity="left|top"
+                    android:hint="Diabetes"
+                    android:textSize="15sp"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+
+            </GridLayout>
+            <LinearLayout
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="206dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_marginTop="2dp"
+                    android:text="Allergies / Reactions"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/txtAddmore2"
+                    android:src="@drawable/addmore30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+            <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/GridLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:rowCount="3"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:orientation="horizontal"
+                tools:context="com.oodi.godsendapp.fragment.profile.MedicalRecordsFragment">
+
+                <EditText
+                    android:id="@+id/EdtHp1"
+                    android:layout_gravity="left|top"
+                    android:hint="Amoxicillin"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+
+                <EditText
+                    android:id="@+id/EdtHp2"
+                    android:layout_gravity="left|top"
+                    android:hint="Amoxicillin"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+
+                <EditText
+                    android:id="@+id/EdtHp3"
+                    android:layout_gravity="left|top"
+                    android:hint="Amoxicillin"
+                    android:visibility="gone"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+
+                <EditText
+                    android:id="@+id/EdtHp4"
+                    android:layout_gravity="left|top"
+                    android:hint="Amoxicillin"
+                    android:visibility="gone"
+                    android:textSize="15sp"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+                <EditText
+                    android:id="@+id/EdtHp5"
+                    android:layout_gravity="left|top"
+                    android:hint="Amoxicillin"
+                    android:textSize="15sp"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bg"/>
+            </GridLayout>
+            <Button
+                android:id="@+id/btnFinish"
+                android:textColor="@color/white"
+                android:text="SAVE CHANGES"
+                android:layout_marginTop="32dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/common_header"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ml250" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/t1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Medical Notes (for emergency)" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/t1"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Medical.pdf"
+                android:textColor="@color/ml250" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/edit" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ml250" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/t2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Medical Conditions" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/t2"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Diabetes"
+                android:textColor="@color/black" />
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_text" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/t3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Medications" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/t3"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Insulin"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_text" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/t4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Reactions/Allergies" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/t4"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Allergic to blood thinner"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_text" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.oodi.godsendapp.fragment.hospital.PaymentFragment">
+
+    <include
+        android:id="@+id/i1"
+        layout="@layout/common_header" />
+
+    <TextView
+        android:visibility="gone"
+        android:background="@drawable/blk_button_bg"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="Debit / Credit Cards"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:visibility="gone"
+
+        android:background="@drawable/blk_button_bg"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="Net Baking"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:visibility="gone"
+
+        android:background="@drawable/blk_button_bg"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="Mobile Wallets"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:background="@drawable/blk_button_bg"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="Razor pay"
+        android:textColor="@color/black"/>
+
+
+    <Button
+        android:id="@+id/btnConfirm"
+        android:textColor="@color/white"
+        android:text="PAY AND BOOK"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_bg"/>
+
+    <LinearLayout
+        android:gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_vertical_margin">
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

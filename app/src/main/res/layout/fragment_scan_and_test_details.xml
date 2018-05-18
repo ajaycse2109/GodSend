@@ -1,0 +1,199 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.oodi.godsendapp.fragment.hospital.ScanAndTestDetailsFragment">
+
+    <include
+        android:id="@+id/i1"
+        layout="@layout/common_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_launcher_background" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:paddingLeft="@dimen/activity_vertical_margin"
+                            android:text="C T Scan"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:visibility="gone"
+                            android:id="@+id/txtDepartment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/activity_vertical_margin"
+                            android:text="General Medicine"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <!--    <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="16sp"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:hint="Appoinment ID"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:singleLine="true"
+                    android:background="@drawable/edittext_bg"/>
+
+                </FrameLayout>-->
+
+                <EditText
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:paddingRight="@dimen/activity_vertical_margin"
+                    android:paddingLeft="@dimen/activity_vertical_margin"
+                    android:hint="Name of the patient"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:singleLine="true"
+                    android:background="@drawable/edittext_bg"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/txtDate"
+                        android:textSize="16sp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:paddingRight="@dimen/activity_vertical_margin"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:hint="Select Date"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:singleLine="true"
+                        android:background="@drawable/edittext_bg"/>
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/txtTime"
+                        android:textSize="16sp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:paddingRight="@dimen/activity_vertical_margin"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:hint="Time Slot"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:singleLine="true"
+                        android:background="@drawable/edittext_bg"/>
+
+                </LinearLayout>
+
+                <EditText
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:padding="@dimen/activity_vertical_margin"
+                    android:hint="Note for physician (optional)"
+                    android:gravity="start"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:singleLine="true"
+                    android:background="@drawable/edittext_bg"/>
+
+                <FrameLayout
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:paddingRight="@dimen/activity_vertical_margin"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:hint="Previous medical records (optional)"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:singleLine="true"
+                        android:background="@drawable/edittext_bg"/>
+
+                    <ImageView
+                        android:layout_marginRight="@dimen/activity_vertical_margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center"
+                        android:textColor="@color/bg"
+                        android:text="Link from My Appointments"/>
+
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/btnConfirm"
+                    android:textColor="@color/white"
+                    android:text="CONFIRM"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_bg"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

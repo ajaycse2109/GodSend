@@ -1,0 +1,123 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.oodi.godsendapp.fragment.profile.InsuranceAndAadhaarFragment">
+
+    <ScrollView
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/sv"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:text="Health Insurance Policy"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:layout_marginTop="22dp"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:hint="Policy Number"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:background="@drawable/edittext_bg"/>
+
+            <EditText
+                android:layout_marginTop="22dp"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:hint="Provider"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:background="@drawable/edittext_bg"/>
+
+            <TextView
+                android:textSize="16sp"
+                android:drawableRight="@drawable/ic_attachment"
+                android:layout_marginTop="22dp"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:text="Attach digital policy (optional)"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:background="@drawable/edittext_bg"/>
+
+            <TextView
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:text="Link Aadhar"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:layout_marginTop="22dp"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:hint="Aadhar Number"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:background="@drawable/edittext_bg"/>
+
+            <TextView
+                android:textSize="16sp"
+                android:drawableRight="@drawable/ic_attachment"
+                android:layout_marginTop="22dp"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:text="Attach Aadhar Card"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:singleLine="true"
+                android:background="@drawable/edittext_bg"/>
+
+            <Button
+                android:id="@+id/btnNext"
+                android:textColor="@color/white"
+                android:text="SAVE"
+                android:layout_marginTop="32dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>

@@ -1,0 +1,201 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.oodi.godsendapp.fragment.walkthrough.WalkthroughOneFragment">
+
+    <LinearLayout
+        android:id="@+id/lnrImg"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:gravity="center"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:text="Book ambulance to your\ncurrent GPS location\nwith real-time tracking.\nFlexible payment methods\nintegrated."
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/first_wt"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/sv"
+        android:layout_marginTop="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:gravity="center_horizontal"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+            android:text="Please complete your profile.\nHelp us serve you better."
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edtFirstName"
+            android:layout_marginTop="22dp"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:hint="First Name"
+            android:focusableInTouchMode="true"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:background="@drawable/edittext_bg"/>
+
+        <EditText
+            android:id="@+id/edtSecondName"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:hint="Second Name"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:singleLine="true"
+            android:background="@drawable/edittext_bg"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edtAddress"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="Address"
+            android:gravity="start"
+            android:inputType="textMultiLine"
+            android:padding="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:singleLine="true"
+            android:background="@drawable/edittext_bg"/>
+
+            <ImageView
+                android:padding="13dp"
+                android:src="@drawable/gpscircle"
+                android:id="@+id/txtUseGPS"
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="26dp"
+                android:layout_gravity="end|bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+
+            <TextView
+                android:textSize="16sp"
+                android:id="@+id/edtGender"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="2"
+                android:background="@drawable/edittext_bg"
+                android:gravity="center_vertical"
+                android:hint="Gender"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/edtDOB"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_bg"
+                android:gravity="center_vertical"
+                android:hint="Date of Birth"
+                android:drawableLeft="@drawable/datepicker"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_vertical_margin"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:background="@drawable/edittext_bg_red"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:padding="13dp"
+                android:src="@drawable/emergency_contact"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <EditText
+                android:inputType="number"
+                android:id="@+id/edtNumber"
+                android:background="@null"
+                android:textSize="16sp"
+                android:hint="Emergency Contact"
+                android:textColor="@color/ml250"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/imgEmergency_contact"
+                android:padding="13dp"
+                android:src="@drawable/contact"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnNext"
+            android:textColor="@color/white"
+            android:text="NEXT"
+            android:layout_marginTop="32dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"/>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
