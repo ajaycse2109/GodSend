@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by pc on 3/14/18.
  */
 
-public class Records implements Serializable {
+public class Records {
         String fname, recordtype, description, recordfile;
 
         public Records(String fname, String recordtype, String description, String recordfile) {

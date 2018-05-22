@@ -1,17 +1,13 @@
-package com.oodi.godsendapp.fragment.hospital.cunsultation;
+package com.oodi.godsendapp.activity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +20,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.oodi.godsend.R;
-import com.oodi.godsendapp.fragment.RootFragment;
 import com.oodi.godsendapp.util.AppUtils;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
@@ -35,65 +30,62 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.PendingIntent.getActivity;
-import static android.content.Context.MODE_PRIVATE;
-import static com.android.volley.VolleyLog.TAG;
 
-public class CPaymentFragment extends RootFragment implements PaymentResultListener {
+public class PaymentActivity extends Activity implements PaymentResultListener {
+    private static final String TAG = PaymentActivity.class.getSimpleName();
+    ImageView imageView;
+    AppUtils appUtils;
     Activity mContext;
     View view;
-    @BindView(R.id.lnrBack)
-    LinearLayout mLnrBack;
-    @BindView(R.id.txtHeaderName)
-    TextView mTxtHeaderName;
-    @BindView(R.id.btn_pay)
-    Button mBtnConfirm;
-   AppUtils appUtils;
-
-    public CPaymentFragment() {
-        // Required empty public constructor
-    }
-
+    String pid, did, bid, fee, payload, docname;
+    TextView dcnm, fe;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.activity_payment, container, false);
-        mContext = getActivity();
-        ButterKnife.bind(this, view);
-        mTxtHeaderName.setText("Payment Process");
-        mLnrBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mContext.onBackPressed();
-            }
-        });
-      //  Checkout.preload(mContext.getApplicationContext());
-        ButterKnife.bind(this, view);
-        appUtils = new AppUtils(mContext);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        startPayment();
+      //  setContentView(R.layout.activity_payment);
+
+        // Payment button created by you in XML layout
+      //  Button button = (Button) findViewById(R.id.btn_pay);
+       mContext = this;
+      //  ButterKnife.bind(this, view);
+      //  appUtils = new AppUtils(mContext);
         SharedPreferences prefs = mContext.getSharedPreferences("Login", MODE_PRIVATE);
         final String auth_token = prefs.getString("auth_token", "");
-        Log.e("auth", auth_token);
-        mBtnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startPayment();
-            }
-        });
+        Log.e("auth" , auth_token);
+     ///   pid = getIntent().getStringExtra("pid");
+       // did = getIntent().getStringExtra("did");
+      //  bid = getIntent().getStringExtra("bid");
+     //   fee = getIntent().getStringExtra("fee");
+     //   docname = getIntent().getStringExtra("docname");
+      //  dcnm = (TextView) findViewById(R.id.dcname);
+      //  fe = (TextView) findViewById(R.id.fee);
+       // dcnm.setText(docname);
+       // fe.setText(fee);
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//            /*    Intent intent = new Intent(PaymentActivity.this, PatientDashboard.class);
+//                intent.putExtra("did",did);
+//                intent.putExtra("pid",pid);
+//              *//*  intent.putExtra("docname",docname);
+//                intent.putExtra("specility",speciality);
+//                // intent.putExtra("imageurl",imageview);
+//                //intent.putExtra("docdegl",docdegl[0]);
+//                intent.putExtra("notino",n);*//*
+//                startActivity(intent);*/
+//                finish();
+//            }
+//        });
 
-
-        return view;
     }
-
-
     public void startPayment() {
         /**
          * You need to pass current activity in order to let Razorpay create CheckoutActivity
          */
-        final RootFragment activity = this;
+        final Activity activity = this;
 
         final Checkout co = new Checkout();
 
@@ -104,7 +96,7 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
             //You can omit the image option to fetch the image from dashboard
             options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
             options.put("currency", "INR");
-            options.put("amount", "1");
+            options.put("amount", "100");
 
             JSONObject preFill = new JSONObject();
             preFill.put("email", "");
@@ -112,13 +104,14 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
 
             options.put("prefill", preFill);
 
-            co.open(mContext, options);
+            co.open(activity, options);
         } catch (Exception e) {
-            Toast.makeText(mContext, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT)
+            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT)
                     .show();
             e.printStackTrace();
         }
     }
+
     /**
      * The name of the function has to be
      * onPaymentSuccess
@@ -128,7 +121,7 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
     @Override
     public void onPaymentSuccess(String razorpayPaymentID) {
         try {
-            Toast.makeText(mContext, "Payment Successful: " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Payment Successful: " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
 
             String SAVECHANGES_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/appointment/confirm_payment/";
 
@@ -150,6 +143,10 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
                                 Toast.makeText(mContext, "You have successfully pay", Toast.LENGTH_LONG).show();
                                 String code = jsonObject.optString("appointment_code");
                             }
+                            else
+                            {
+                                Toast.makeText(mContext, "You have failed to pay", Toast.LENGTH_LONG).show();
+                            }
 
                             appUtils.dismissProgressBar();
 
@@ -160,15 +157,15 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
                         public void onErrorResponse(VolleyError error) {
                             // update_profile();
 
-                            Toast.makeText(mContext, "Error While connecting to server ur payment Has Done", Toast.LENGTH_SHORT).show();
-                            mContext.finish();
+                            Toast.makeText(PaymentActivity.this, "Error While connecting to server ur payment Has Done", Toast.LENGTH_SHORT).show();
+                            finish();
                             appUtils.dismissProgressBar();
                         }
                     }) {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("appointment_code" ,"AD0000004H" );
+                    params.put("appointment_code" ,"AD0000026H" );
                     return params;
                 }
 
@@ -180,7 +177,7 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
 
-                    SharedPreferences prefs = mContext.getSharedPreferences("Login", MODE_PRIVATE);
+                    SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
                     final String auth_token = prefs.getString("auth_token", "");
 
                     Map<String, String>  params = new HashMap<String, String>();
@@ -208,7 +205,7 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
     @Override
     public void onPaymentError(int code, String response) {
         try {
-            Toast.makeText(mContext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e(TAG, "Exception in onPaymentError", e);
         }

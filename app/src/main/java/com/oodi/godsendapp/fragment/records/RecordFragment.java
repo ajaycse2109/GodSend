@@ -93,7 +93,6 @@ public class RecordFragment extends RootFragment {
         ButterKnife.bind(this, view);
       //  mTxtHeaderName.setText("Records");
         mRecordAdapter = new RecordAdapter(mContext , mRecordsList , this);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mRecRecords.setLayoutManager(layoutManager);
         mRecRecords.setAdapter(mRecordAdapter);
@@ -154,14 +153,14 @@ public class RecordFragment extends RootFragment {
             @Override
             public void onClick(View view) {
 
-                    providers();
+                  //  providers();
                 // openBottomSheet();
             }
         });
 
         return view;
     }
-    private void providers()   {
+  /*  private void providers()   {
 
         //   appUtils.showProgressBarLoading();
 
@@ -228,7 +227,7 @@ public class RecordFragment extends RootFragment {
         requestQueue.add(stringRequest);
 
 
-    }
+    }*/
     public void openBottomSheet() {
 
         View view = getLayoutInflater().inflate(R.layout.bottom_sheet, null);
@@ -236,18 +235,12 @@ public class RecordFragment extends RootFragment {
         LinearLayout lnrPrescription = view.findViewById(R.id.lnrPrescription);
         LinearLayout lnrTestReport = view.findViewById(R.id.lnrTestReport);
         LinearLayout lnrScanImage = view.findViewById(R.id.lnrScanImage);
-
         final TextView txtPrescription = view.findViewById(R.id.txtPrescription);
         final TextView txtTestReport = view.findViewById(R.id.txtTestReport);
         final TextView txtScanImage = view.findViewById(R.id.txtScanImage);
-
         final ImageView imgPrescription = view.findViewById(R.id.imgPrescription);
         final ImageView imgTestReport = view.findViewById(R.id.imgTestReport);
         final ImageView imgScanImage = view.findViewById(R.id.imgScanImage);
-
-      //  TextView txtTakePhoto = view.findViewById(R.id.txtTakePhoto);
-       // TextView txtUploadFile = view.findViewById(R.id.txtUploadFile);
-
         final Dialog mBottomSheetDialog = new Dialog(mContext,
                 R.style.MaterialDialogSheet);
         mBottomSheetDialog.setContentView(view);

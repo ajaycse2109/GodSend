@@ -100,9 +100,9 @@ public class WalkthroughFourFragment extends Fragment implements AdapterView.OnI
             public void onClick(View view) {
 
                 WalkthroughActivity.mImgBack.setVisibility(View.VISIBLE);
-
                 mLnrImg.setVisibility(View.GONE);
                 mSv.setVisibility(View.VISIBLE);
+
             }
         });
 

@@ -175,7 +175,8 @@ public class CScanAndTestDetailsFragment extends RootFragment {
 
                             }
                         }, mYear, mMonth, mDay);
-                datePickerDialog.show();
+                 datePickerDialog.show();
+                 datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             }
         });
 

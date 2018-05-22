@@ -45,7 +45,7 @@ public class CReviewReservationFragment extends RootFragment {
         view = inflater.inflate(R.layout.fragment_review_reservation, container, false);
         mContext = getActivity();
         ButterKnife.bind(this, view);
-        mTxtHeaderName.setText("Review Reservation");
+        mTxtHeaderName.setText("Completed");
 
         mTxtId.setVisibility(View.GONE);
         mLnrBack.setOnClickListener(new View.OnClickListener() {

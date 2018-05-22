@@ -197,8 +197,8 @@ public class WalkthroughOneFragment extends Fragment {
 
                             }
                         }, mYear, mMonth, mDay);
-                datePickerDialog.show();
-                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                    datePickerDialog.show();
+                    datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             }
         });
 

@@ -28,10 +28,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAgFPqdrXew0BDhcJeAtu_msx66Znz6Y8Y" />
-
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_SCGpKrMCSKNG54"/>
         <service android:name="com.oodi.godsendapp.util.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <service android:name="com.oodi.godsendapp.util.MyFirebaseMessagingService">
@@ -39,7 +41,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <activity
             android:name="com.oodi.godsendapp.activity.OTPActivity"
             android:screenOrientation="portrait"
@@ -67,6 +68,9 @@
         <activity
             android:name="com.oodi.godsendapp.activity.RouteActivity"
             android:label="@string/title_activity_route"></activity>
+        <activity
+            android:name="com.oodi.godsendapp.activity.PaymentActivity"
+            android:label="pay"></activity>
     </application>
 
 </manifest>
