@@ -33,6 +33,7 @@
                     android:layout_marginTop="8dp"
                     android:paddingLeft="@dimen/activity_vertical_margin"
                     android:text="Dr. Varun"
+                    android:id="@+id/txtPName"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -93,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:text="15:12 jan 23 2018"
+                    android:text="15:12 May 23 2018"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 

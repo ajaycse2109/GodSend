@@ -1,10 +1,19 @@
 package com.oodi.godsendapp.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -46,23 +55,35 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
     public static Activity mContext;
 
     private GoogleMap mMap;
-
+    public double latitude;
+    public double longitude;
     @BindView(R.id.lnrBack)
     LinearLayout mLnrBack ;
     @BindView(R.id.txtConfirmBooking)
     TextView mTxtConfirmBooking;
     @BindView(R.id.textView)
     TextView mtextView;
+    @BindView(R.id.txtPickup)
+    TextView mtxtPickup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ambulance);
         mContext = this;
         ButterKnife.bind(mContext);
+        getUserLocation();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+
+
+
+
+
 
         mLnrBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +95,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("content");
+                builder.setTitle("Coming Soon");
                 builder.setCancelable(true);
                 builder.setMessage(mContext.getResources().getString(R.string.canceldailogmsg3));
                 builder.setPositiveButton("OK", null);
@@ -92,6 +113,42 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         });
 
     }
+
+
+    public void getUserLocation()
+    {
+        // mtxtUseGPS.setImageResource(R.drawable.gps_selected);
+          String address = "";
+        GPSService mGPSService = new GPSService(mContext);
+        mGPSService.getLocation();
+
+        if (mGPSService.isLocationAvailable == false) {
+
+           //getLocationPermission();
+            // Here you can ask the user to try again, using return; for that
+            // Toast.makeText(mContext, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
+            return;
+
+            // Or you can continue without getting the location, remove the return; above and uncomment the line given below
+            // address = "Location not available";
+        } else {
+
+            // Getting location co-ordinates
+             latitude = mGPSService.getLatitude();
+             longitude = mGPSService.getLongitude();
+            // Toast.makeText(mContext, "Latitude:" + latitude + " | Longitude: " + longitude, Toast.LENGTH_LONG).show();
+
+             address = mGPSService.getLocationAddress();
+             mtxtPickup.setText(address);
+        }
+
+        //Toast.makeText(mContext, "Your address is: " + address, Toast.LENGTH_SHORT).show();
+        // mEdtAddress.setText(address);
+// make sure you close the gps after using it. Save user's battery power
+        mGPSService.closeGPS();
+    }
+
+
     public void startPayment() {
         /**
          * You need to pass current activity in order to let Razorpay create CheckoutActivity
@@ -221,7 +278,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng sydney = new LatLng(12.9716, 77.5946);
+        LatLng sydney = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
         //For zooming automatically to the location of the marker
@@ -230,5 +287,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+
     }
 }

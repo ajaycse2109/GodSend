@@ -2,6 +2,7 @@ package com.oodi.godsendapp.fragment.hospital;
 
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,9 +14,11 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -63,6 +66,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.GlobalClass;
+import com.oodi.godsendapp.activity.GPSService;
 import com.oodi.godsendapp.activity.MainActivity;
 import com.oodi.godsendapp.adapter.ProvidersAdapter;
 import com.oodi.godsendapp.fragment.RootFragment;
@@ -95,7 +99,8 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
     Activity mContext;
     View view ;
     AppUtils appUtils;
-
+public double latitude;
+public  double longitude;
 
     @BindView(R.id.autoCompleteTextView)
     AutoCompleteTextView mautoCompleteTextView;
@@ -170,11 +175,14 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
                 }
                 else
                 {
-                    mautoCompleteTextView.setHint("Search for hospitals");
+                    mautoCompleteTextView.setHint("Search For Hospitals");
                     return false;
                 }
             }
         });
+
+
+
 //        mCardNearestHospital.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -195,6 +203,38 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
 
         return view;
     }
+    public void getUserLocation()
+    {
+        // mtxtUseGPS.setImageResource(R.drawable.gps_selected);
+        String address = "";
+        GPSService mGPSService = new GPSService(mContext);
+        mGPSService.getLocation();
+
+        if (mGPSService.isLocationAvailable == false) {
+
+            //getLocationPermission();
+            // Here you can ask the user to try again, using return; for that
+            // Toast.makeText(mContext, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
+            return;
+
+            // Or you can continue without getting the location, remove the return; above and uncomment the line given below
+            // address = "Location not available";
+        } else {
+
+            // Getting location co-ordinates
+            latitude = mGPSService.getLatitude();
+            longitude = mGPSService.getLongitude();
+            // Toast.makeText(mContext, "Latitude:" + latitude + " | Longitude: " + longitude, Toast.LENGTH_LONG).show();
+
+            address = mGPSService.getLocationAddress();
+           // mtxtPickup.setText(address);
+        }
+
+        //Toast.makeText(mContext, "Your address is: " + address, Toast.LENGTH_SHORT).show();
+        // mEdtAddress.setText(address);
+// make sure you close the gps after using it. Save user's battery power
+        mGPSService.closeGPS();
+    }
 
     public void prepareProvidersData() {
 
@@ -205,6 +245,8 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
                 new Response.Listener<String>() {
+                    @TargetApi(Build.VERSION_CODES.O)
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(String response) {
 
@@ -222,6 +264,8 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
 
                             String id = jsonObject.optString("id");
                             String name = jsonObject.optString("name");
+                            String lat=jsonObject.optString("lat");
+                            String lon = jsonObject.optString("lon");
                             String category = jsonObject.optString("category");
                             String phone = jsonObject.optString("phone");
                             String address = jsonObject.optString("address");
@@ -261,6 +305,7 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
                         mautoCompleteTextView.setThreshold(1);
                         mautoCompleteTextView.setAdapter(Hospitaladapter);
                         mautoCompleteTextView.setTextColor(Color.BLACK);
+
                //         appUtils.dismissProgressBar();
                     }
                 },
@@ -344,7 +389,7 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
 
         mMap.setMyLocationEnabled(true);
         // For dropping a marker at a point on the Map
-        LatLng sydney = new LatLng(12.9716, 77.5946);
+        LatLng sydney = new LatLng(latitude, longitude);
         googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
         //For zooming automatically to the location of the marker
@@ -375,23 +420,24 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
             }
         });
 
-        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+//        googleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+//
+//            @Override
+//            public void onCameraChange(final CameraPosition arg0) {
+//                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+//                    @Override
+//                    public void onMapLoaded() {
+//                        LatLng latLng= arg0.target;
+//
+//                        //lat = latLng.latitude ;
+//                        //lng = latLng.longitude;
+//
+//                        //Toast.makeText(this, latLng.toString(), Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//            }
+//        });
 
-            @Override
-            public void onCameraChange(final CameraPosition arg0) {
-                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        LatLng latLng= arg0.target;
-
-                        //lat = latLng.latitude ;
-                        //lng = latLng.longitude;
-
-                        //Toast.makeText(this, latLng.toString(), Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
 
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
@@ -531,8 +577,7 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
 
     }
 
-    private void providers() {
- }
+
 
     private void displayLocationSettingsRequest() {
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(mContext)

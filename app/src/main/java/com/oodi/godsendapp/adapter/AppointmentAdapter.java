@@ -10,9 +10,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.oodi.godsend.R;
+import com.oodi.godsendapp.activity.MainActivity;
 import com.oodi.godsendapp.fragment.appointments.AppointmentsFragment;
 import com.oodi.godsendapp.fragment.appointments.CReviewReservationFragment;
+import com.oodi.godsendapp.fragment.hospital.ReviewReservationFragment;
+import com.oodi.godsendapp.fragment.hospital.cunsultation.CScanAndTestDepartmentFragment;
 import com.oodi.godsendapp.pojo.Appointment;
+import com.oodi.godsendapp.pojo.Department;
+import com.oodi.godsendapp.pojo.Records;
 
 import java.util.List;
 
@@ -27,22 +32,21 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     AppointmentsFragment appointmentsFragment;
     String type ;
 
-    public AppointmentAdapter(Activity mContext, List<Appointment> appointmentList, AppointmentsFragment appointmentsFragment, String type) {
+    public AppointmentAdapter(Activity mContext, List<Appointment> mRecordsList) {
         this.mContext = mContext ;
-        this.appointmentList = appointmentList ;
-        this.appointmentsFragment = appointmentsFragment;
-        this.type = type;
+        this.appointmentList = mRecordsList ;
+        //this.recordFragment = recordFragment;
     }
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtCancelAppointment , txtMsg , txtStatus , txtTime , txtBook;
+        TextView txtCancelAppointment , txtMsg , txtStatus , txtTime , txtName;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
             txtCancelAppointment = itemView.findViewById(R.id.txtCancelAppointment);
             txtMsg = itemView.findViewById(R.id.txtMsg);
+            txtName=itemView.findViewById(R.id.txtPName);
             txtStatus = itemView.findViewById(R.id.txtStatus);
             txtTime = itemView.findViewById(R.id.txtTime);
           //  txtBook = itemView.findViewById(R.id.txtBook);
@@ -66,23 +70,35 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
-        if (!type.equals("upcoming")){
+       // if (!type.equals("upcoming")){
 
-            holder.txtCancelAppointment.setText("Contact Hospital");
-            holder.txtStatus.setText("Completed at");
-            holder.txtTime.setVisibility(View.GONE);
-        }
+         //   holder.txtCancelAppointment.setText("Contact Hospital");
+        //    holder.txtStatus.setText("Completed at");
+          //  holder.txtTime.setVisibility(View.GONE);
+      //  }
+        //else
+        //{
+            final Appointment appointment = appointmentList.get(position);
+
+            holder.txtName.setText(appointment.provName);
+        //}
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Cancel Appointment");
-                builder.setCancelable(true);
-                builder.setMessage(mContext.getResources().getString(R.string.canceldailogmsg));
-                builder.setPositiveButton("OK", null);
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//                builder.setTitle("Cancel Appointment");
+//                builder.setCancelable(true);
+//                builder.setMessage(mContext.getResources().getString(R.string.canceldailogmsg));
+//                builder.setPositiveButton("OK", null);
+//                builder.setNegativeButton("Cancel", null);
+//                builder.show();
+                MainActivity mainActivity = (MainActivity)mContext;
+                FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.root_appointment, new ReviewReservationFragment());
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
@@ -91,11 +107,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     @Override
     public int getItemCount() {
         //return floor.length;
-        if (type.equals("upcoming")){
-            return 1;
-        }else {
-            return 2;
-        }
+        return appointmentList.size();
     }
 
 

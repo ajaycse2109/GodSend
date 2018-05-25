@@ -216,7 +216,8 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
         msavechanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attachfile();
+
+                //attachfile();
                // saveProfileAccount();
             }
         });

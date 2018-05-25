@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +28,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.activity.PaymentActivity;
+import com.oodi.godsendapp.adapter.AppointmentAdapter;
 import com.oodi.godsendapp.fragment.RootFragment;
+import com.oodi.godsendapp.pojo.Appointment;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 
@@ -50,6 +54,8 @@ public class CSaTReviewFragment extends RootFragment implements PaymentResultLis
     Activity mContext;
     View view ;
 String id;
+@BindView(R.id.appmntId)
+TextView mappmntId;
     @BindView(R.id.lnrBack)
     LinearLayout mLnrBack ;
     @BindView(R.id.txtHeaderName)
@@ -71,6 +77,7 @@ TextView mtxtNamePatient;
         view = inflater.inflate(R.layout.fragment_sa_treview, container, false);
         mContext = getActivity();
         ButterKnife.bind(this, view);
+        getAppointmentDetails();
         mTxtHeaderName.setText("Review");
 
         mLnrBack.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +226,83 @@ TextView mtxtNamePatient;
 public void  getAppointmentDetails()
 {
 
+    String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/appointment/latest/";
 
+    StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(response);
+
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+                    JSONObject appObject=null;
+
+                    appObject=jsonObject.optJSONObject("appointment");
+                    String code = appObject.optString("code");
+                    JSONObject provObject =null;
+                    provObject = appObject.optJSONObject("provider");
+                    String provName= provObject.optString("name");
+
+                    JSONObject appDetObject = null;
+                    appDetObject = appObject.optJSONObject("appointment_details");
+
+
+                    SharedPreferences sharedpreferences = view.getContext().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("app_code",code);
+                    editor.putString("prov_name",provName);
+mappmntId.setText(code);
+                    // Log.d("PARAM::ADAP", saT.getDepartment());
+
+                    editor.commit();
+                    //   appUtils.dismissProgressBar();
+//                    Appointment appmnt = new Appointment();
+//                    appmnt.setAppCode(code);
+//                    appmnt.setProvName(provName);
+//                    mUpcomingList.add(appmnt);
+//
+//                    mUpcomingAppointmentAdapter = new AppointmentAdapter(getActivity()  , mUpcomingList );
+//
+//                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+//                    mRecUpcoming.setLayoutManager(layoutManager);
+//                    mRecUpcoming.setAdapter(mUpcomingAppointmentAdapter);
+
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                    // appUtils.dismissProgressBar();
+                }
+            }) {
+        @Override
+        public String getBodyContentType() {
+            return "application/x-www-form-urlencoded; charset=UTF-8";
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+
+            SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+            String auth_token = prefs.getString("auth_token", "");
+
+            // auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("auth-token", auth_token);
+            params.put("Content-Type", "application/x-www-form-urlencoded");
+
+            return params;
+        }
+    };
+
+    RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+    requestQueue.add(stringRequest);
 
 
 }

@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "791586791025",
-    "firebase_url": "https://gsend-6a7f8.firebaseio.com",
-    "project_id": "gsend-6a7f8",
-    "storage_bucket": "gsend-6a7f8.appspot.com"
+    "project_number": "17793992755",
+    "firebase_url": "https://cliqhealth-oodi.firebaseio.com",
+    "project_id": "cliqhealth-oodi",
+    "storage_bucket": "cliqhealth-oodi.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:791586791025:android:1bbae76379b54a77",
+        "mobilesdk_app_id": "1:17793992755:android:1bbae76379b54a77",
         "android_client_info": {
           "package_name": "com.oodi.godsendapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "791586791025-ktl9ublalv7unm8jdp5hart0biopqeq9.apps.googleusercontent.com",
+          "client_id": "17793992755-lqe7ca8nftrdhspjocav7k6lvp4688jb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.oodi.godsendapp",
@@ -23,13 +23,25 @@
           }
         },
         {
-          "client_id": "791586791025-k33mg4r01lkpt1pcl3hq09ur89a0tglj.apps.googleusercontent.com",
+          "client_id": "17793992755-e3va7ed5s6h3trcqarqddn2fno3d5bdu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oodi.godsendapp",
+            "certificate_hash": "24c98a02d2908236076337be89b691f2c5083cd7"
+          }
+        },
+        {
+          "client_id": "17793992755-jd1fh8138ntiaunc50rcedgjju3ane17.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "17793992755-jd1fh8138ntiaunc50rcedgjju3ane17.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB_jbdGdeS__7bvCHNu8iCv7B4przULc0E"
+          "current_key": "AIzaSyBFxxtmNlLWYfwQin2C_y4g43hBg77Ug8s"
         }
       ],
       "services": {
@@ -40,8 +52,15 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "791586791025-k33mg4r01lkpt1pcl3hq09ur89a0tglj.apps.googleusercontent.com",
+              "client_id": "17793992755-jd1fh8138ntiaunc50rcedgjju3ane17.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "17793992755-2sv971c77rbdarrqv78j7b55t5jo0d39.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.oodi.Godsend"
+              }
             }
           ]
         },

@@ -90,7 +90,7 @@ public class PaymentActivity extends FragmentActivity implements PaymentResultLi
             //You can omit the image option to fetch the image from dashboard
             options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
             options.put("currency", "INR");
-            options.put("amount", "100");
+            options.put("amount", "10000");
 
             JSONObject preFill = new JSONObject();
             preFill.put("email", "");

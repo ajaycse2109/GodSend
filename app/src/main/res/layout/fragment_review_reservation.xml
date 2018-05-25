@@ -42,7 +42,7 @@
         android:gravity="center"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:text="Your booking is confirmed!\nBooking ID: AHF982047"/>
+        android:text="Your booking is confirmed!\nBooking ID: "/>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -139,6 +139,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:text="AD1478H"
+                        android:id="@+id/appmntId"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />

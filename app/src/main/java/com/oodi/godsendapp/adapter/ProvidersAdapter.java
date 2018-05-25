@@ -71,7 +71,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersAdapter.MyVi
       //  holder.txtdepname.setText(saT.getDepartment());
         holder.txtViewTeam.setText(saT.get_hospitalName());
 Picasso.with(mContext).load(saT.getLogo()).fit().centerCrop().into(holder.txtimg);
-        holder.txtViewTeam.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

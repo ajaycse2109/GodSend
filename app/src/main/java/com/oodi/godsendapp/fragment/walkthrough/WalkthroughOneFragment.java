@@ -6,15 +6,22 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Region;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,6 +46,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.activity.GPSService;
 import com.oodi.godsendapp.activity.MainActivity;
@@ -62,11 +70,13 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WalkthroughOneFragment extends Fragment {
+public class WalkthroughOneFragment extends Fragment implements  LocationListener {
     private static final int PICKFILE_RESULT_CODE = 100;
     Activity mContext ;
     View view ;
     AppUtils appUtils;
+    boolean mLocationPermissionGranted = false;
+    final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private int mYear, mMonth, mDay;
     String DOB = "" , gender= "M";
     @BindView(R.id.txtUseGPS)
@@ -239,6 +249,10 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onClick(View view) {
+
+
+        getLocationPermission();
+
         mtxtUseGPS.setImageResource(R.drawable.gps_selected);
         String address = "";
         GPSService mGPSService = new GPSService(mContext);
@@ -246,8 +260,9 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
 
         if (mGPSService.isLocationAvailable == false) {
 
-            // Here you can ask the user to try again, using return; for that
-            Toast.makeText(mContext, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
+
+        // Here you can ask the user to try again, using return; for that
+           // Toast.makeText(mContext, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
             return;
 
             // Or you can continue without getting the location, remove the return; above and uncomment the line given below
@@ -278,6 +293,8 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
                 startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
             }
         });
+
+
         mEdtFirstName.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -343,7 +360,22 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
         });
         return view;
     }
-
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -552,5 +584,40 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
 
 }
