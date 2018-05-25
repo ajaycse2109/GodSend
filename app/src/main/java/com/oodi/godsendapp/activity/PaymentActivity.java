@@ -1,40 +1,33 @@
 package com.oodi.godsendapp.activity;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.oodi.godsend.R;
+import com.oodi.godsendapp.fragment.hospital.ReviewReservationFragment;
 import com.oodi.godsendapp.util.AppUtils;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import butterknife.BindView;
 
-import butterknife.ButterKnife;
+import static java.security.AccessController.getContext;
 
-import static android.app.PendingIntent.getActivity;
+public class PaymentActivity extends FragmentActivity implements PaymentResultListener {
 
-public class PaymentActivity extends Activity implements PaymentResultListener {
+    @BindView(R.id.FrameId)
+    FrameLayout fl;
     private static final String TAG = PaymentActivity.class.getSimpleName();
     ImageView imageView;
     AppUtils appUtils;
@@ -44,9 +37,10 @@ public class PaymentActivity extends Activity implements PaymentResultListener {
     TextView dcnm, fe;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
         startPayment();
-      //  setContentView(R.layout.activity_payment);
+        super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_payment);
 
         // Payment button created by you in XML layout
       //  Button button = (Button) findViewById(R.id.btn_pay);
@@ -123,73 +117,14 @@ public class PaymentActivity extends Activity implements PaymentResultListener {
         try {
             Toast.makeText(this, "Payment Successful: " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
 
-            String SAVECHANGES_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/appointment/confirm_payment/";
-
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, SAVECHANGES_URL,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-
-                            JSONObject jsonObject = null;
-                            try {
-                                jsonObject = new JSONObject(response);
-                            } catch (JSONException e1) {
-                                e1.printStackTrace();
-                            }
-
-                            String status = jsonObject.optString("status");
-
-                            if (status.equals("Booked")){
-                                Toast.makeText(mContext, "You have successfully pay", Toast.LENGTH_LONG).show();
-                                String code = jsonObject.optString("appointment_code");
-                            }
-                            else
-                            {
-                                Toast.makeText(mContext, "You have failed to pay", Toast.LENGTH_LONG).show();
-                            }
-
-                            appUtils.dismissProgressBar();
-
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // update_profile();
-
-                            Toast.makeText(PaymentActivity.this, "Error While connecting to server ur payment Has Done", Toast.LENGTH_SHORT).show();
-                            finish();
-                            appUtils.dismissProgressBar();
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("appointment_code" ,"AD0000026H" );
-                    return params;
-                }
-
-                @Override
-                public String getBodyContentType() {
-                    return "application/x-www-form-urlencoded; charset=UTF-8";
-                }
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-
-                    SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
-                    final String auth_token = prefs.getString("auth_token", "");
-
-                    Map<String, String>  params = new HashMap<String, String>();
-                    params.put("auth-token", auth_token);
-                    params.put("Content-Type", "application/x-www-form-urlencoded");
-
-                    return params;
-                }
-            };
-
-            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-            requestQueue.add(stringRequest);
+            try {
+ReviewReservationFragment fragment = new ReviewReservationFragment();
+getSupportFragmentManager().beginTransaction().add(R.id.FrameId,fragment).commitAllowingStateLoss();
+            }
+            catch (Exception e)
+            {
+                Log.e(TAG, "Exception in onPaymentSuccess", e);
+            }
 
         } catch (Exception e) {
             Log.e(TAG, "Exception in onPaymentSuccess", e);

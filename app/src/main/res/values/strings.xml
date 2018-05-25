@@ -10,5 +10,8 @@
     <string name="spinner_title">Blood Group</string>
     <string name="base_url"> https://calm-spire-67130.herokuapp.com/</string>
     <string name="title">All Records</string>
-    <string name="canceldailogmsg">Appointment cancellation details</string>
+    <string name="canceldailogmsg">A cancellation fee of Rs.1000 will be deducted. For further queries please contact the hospital.</string>
+    <string name="canceldailogmsg2">A cancellation fee of Rs.200 will be deducted. For further queries please contact the hospital.</string>
+    <string name="canceldailogmsg3">Our usher service provides an assistant at the hospital to help you complete all the formalities quickly and conveniently.
+</string>
 </resources>

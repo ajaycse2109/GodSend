@@ -2,21 +2,41 @@ package com.oodi.godsendapp.fragment.hospital;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.oodi.godsend.R;
+import com.oodi.godsendapp.activity.WalkthroughActivity;
 import com.oodi.godsendapp.fragment.RootFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +52,8 @@ public class ScanAndTestDetailsFragment extends RootFragment {
     TextView mTxtHeaderName;
     @BindView(R.id.btnConfirm)
     Button mBtnConfirm;
+    @BindView(R.id.edtNotes)
+    EditText medtNotes;
 
     public ScanAndTestDetailsFragment() {
         // Required empty public constructor
@@ -57,16 +79,20 @@ public class ScanAndTestDetailsFragment extends RootFragment {
         mBtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction transaction = getFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.root_hospital, new SaTReviewFragment());
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.addToBackStack(null);
-                transaction.commit();
+              //  Log.e(TAG, "onClick: ","jjk" );
+              //  book();
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.root_hospital, new SaTReviewFragment());
+                            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            transaction.addToBackStack(null);
+                            transaction.commit();
+
             }
         });
 
         return view;
     }
+
 
 }

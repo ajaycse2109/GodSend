@@ -49,8 +49,8 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
     LinearLayout mLnrBack;
     @BindView(R.id.txtHeaderName)
     TextView mTxtHeaderName;
-    @BindView(R.id.btn_pay)
-    Button mBtnConfirm;
+    /*@BindView(R.id.btn_pay)
+    Button mBtnConfirm;*/
    AppUtils appUtils;
 
     public CPaymentFragment() {
@@ -77,12 +77,12 @@ public class CPaymentFragment extends RootFragment implements PaymentResultListe
         SharedPreferences prefs = mContext.getSharedPreferences("Login", MODE_PRIVATE);
         final String auth_token = prefs.getString("auth_token", "");
         Log.e("auth", auth_token);
-        mBtnConfirm.setOnClickListener(new View.OnClickListener() {
+       /* mBtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startPayment();
             }
-        });
+        });*/
 
 
         return view;

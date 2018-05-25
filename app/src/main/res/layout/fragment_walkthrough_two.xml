@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/EdtHsp1"
             android:layout_marginTop="22dp"
             android:paddingLeft="@dimen/activity_vertical_margin"
@@ -66,7 +66,7 @@
             android:singleLine="true"
             android:background="@drawable/edittext_bg"/>
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/EdtHsp2"
                 android:visibility="gone"
                 android:layout_marginTop="22dp"
@@ -81,7 +81,7 @@
                 android:singleLine="true"
                 android:background="@drawable/edittext_bg"/>
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/EdtHsp3"
                 android:visibility="gone"
                 android:layout_marginTop="22dp"
@@ -96,7 +96,7 @@
                 android:singleLine="true"
                 android:background="@drawable/edittext_bg"/>
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/EdtHsp4"
                 android:visibility="gone"
                 android:layout_marginTop="22dp"
@@ -110,7 +110,7 @@
                 android:layout_height="50dp"
                 android:singleLine="true"
                 android:background="@drawable/edittext_bg"/>
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/EdtHsp5"
                 android:visibility="gone"
                 android:layout_marginTop="22dp"

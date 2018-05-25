@@ -2,13 +2,16 @@ package com.oodi.godsendapp.fragment.records;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +25,13 @@ import android.widget.Toast;
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.activity.AmbulanceActivity;
 import com.oodi.godsendapp.fragment.RootFragment;
+import com.oodi.godsendapp.pojo.Records;
 import com.oodi.godsendapp.util.OnBackPressListener;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,8 +40,9 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class AddHealthRecordFragment extends RootFragment {
- Activity mContext;
+    Activity mContext;
     View view ;
+    String id,id2,id3, flagPref;
     @BindView(R.id.lnrBack)
     LinearLayout mLnrBack ;
     @BindView(R.id.changeimg)
@@ -46,10 +53,13 @@ public class AddHealthRecordFragment extends RootFragment {
     Button mBtnUpload;
     @BindView(R.id.recordfile)
     EditText mrecordfile;
+    @BindView(R.id.desc)
+    EditText mdesc;
+    List<Records> mRecordsList = new ArrayList<>();
     private static final int RQS_OPEN_IMAGE = 1;
     private static final int RQS_GET_IMAGE = 2;
     private static final int RQS_PICK_IMAGE = 3;
-public AddHealthRecordFragment() {
+    public AddHealthRecordFragment() {
         // Required empty public constructor
     }
 
@@ -61,12 +71,20 @@ public AddHealthRecordFragment() {
         view = inflater.inflate(R.layout.fragment_allrecordslist, container, false);
         mContext = getActivity();
         ButterKnife.bind(this, view);
-
-        mTxtHeaderName.setText("Records");
+        SharedPreferences pref = getActivity().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+        id = pref.getString("file_name", "");
+        id2 = pref.getString("record_type", "");
+        id3 = pref.getString("des", "");
+        Log.d("PARAM::", id);
+        Log.d("PARAM::", id2);
+        Log.d("PARAM::", id3);
+        mrecordfile.setText(id);
+        mTxtHeaderName.setText(id2);
+        mdesc.setText(id3);
         mLnrBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              mContext.onBackPressed();
+                mContext.onBackPressed();
             }
         });
         mfilename.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +117,7 @@ public AddHealthRecordFragment() {
 
                 //imageView.setImageBitmap(null);
                 // textInfo1.setText("");
-                mrecordfile.setText("");
+                mrecordfile.setText(id);
 
                 Uri mediaUri = data.getData();
                 // File myFile = new File(String.valueOf((mediaUri)));

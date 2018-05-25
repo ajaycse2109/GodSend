@@ -7,9 +7,23 @@
     android:background="@color/bg"
     tools:context="com.oodi.godsendapp.fragment.hospital.ReviewReservationFragment">
 
-    <include
+    <!--<include
         android:id="@+id/i1"
-        layout="@layout/common_header" />
+        layout="@layout/common_header" />-->
+
+    <TextView
+        android:id="@+id/t1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="Confirmed"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_color"/>
 
     <ImageView
         android:visibility="gone"
@@ -62,6 +76,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/txtpatName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Sundar"
@@ -80,6 +95,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:id="@+id/appmntFor"
                         android:text="CT Scan"
                         android:textColor="@color/black"
                         android:textSize="18sp"
@@ -192,20 +208,34 @@
                 android:src="@drawable/qr"
                 android:visibility="gone" />
 
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:text="OK" />
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
-<!--    <Button
-        android:visibility="gone"
-        android:id="@+id/btnCancelAppointment"
-        android:text="CANCEL APPOINTMENT"
-        android:textColor="@color/white"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_vertical_margin"
+    <Button
+        android:id="@+id/buttonOk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_red_bg"/>-->
+        android:background="@drawable/button_bg"
+        android:text="OK"
+        android:textColor="@color/white" />
+
+    <!--    <Button
+            android:visibility="gone"
+            android:id="@+id/btnCancelAppointment"
+            android:text="CANCEL APPOINTMENT"
+            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_red_bg"/>-->
 
 </LinearLayout>

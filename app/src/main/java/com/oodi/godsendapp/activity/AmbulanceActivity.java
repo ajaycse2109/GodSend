@@ -76,7 +76,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("content");
                 builder.setCancelable(true);
-                builder.setMessage(mContext.getResources().getString(R.string.canceldailogmsg));
+                builder.setMessage(mContext.getResources().getString(R.string.canceldailogmsg3));
                 builder.setPositiveButton("OK", null);
                 builder.show();
             }

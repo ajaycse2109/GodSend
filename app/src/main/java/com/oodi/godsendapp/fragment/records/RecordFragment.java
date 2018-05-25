@@ -13,8 +13,10 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +39,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.oodi.godsend.R;
+import com.oodi.godsendapp.adapter.CSaTAdapter;
 import com.oodi.godsendapp.adapter.RecordAdapter;
 import com.oodi.godsendapp.fragment.RootFragment;
 import com.oodi.godsendapp.pojo.Records;
+import com.oodi.godsendapp.pojo.SaT;
 import com.squareup.picasso.Picasso;
 
 
@@ -65,6 +69,8 @@ public class RecordFragment extends RootFragment {
     JSONArray notilist, notic;
     Activity mContext;
     View view ;
+    String id;
+    String selectedItem;
     RequestQueue requestQueue;
     List<Records> mRecordsList = new ArrayList<>();
     RecordAdapter mRecordAdapter ;
@@ -76,8 +82,8 @@ public class RecordFragment extends RootFragment {
     RecyclerView mRecRecords;
     @BindView(R.id.btnAddFiles)
     Button mBtnAddFiles;
-    @BindView(R.id.txtHeaderName)
-    TextView mTxtHeaderName;
+//    @BindView(R.id.txtHeaderName)
+//    TextView mTxtHeaderName;
     public RecordFragment() {
         // Required empty public constructor
     }
@@ -91,8 +97,8 @@ public class RecordFragment extends RootFragment {
         view = inflater.inflate(R.layout.fragment_record, container, false);
         mContext = getActivity();
         ButterKnife.bind(this, view);
-      //  mTxtHeaderName.setText("Records");
-        mRecordAdapter = new RecordAdapter(mContext , mRecordsList , this);
+        //  mTxtHeaderName.setText("Records");
+        mRecordAdapter = new RecordAdapter(mContext , mRecordsList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mRecRecords.setLayoutManager(layoutManager);
         mRecRecords.setAdapter(mRecordAdapter);
@@ -108,9 +114,24 @@ public class RecordFragment extends RootFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, values);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         mAllrecords.setAdapter(adapter);
-
-
         mAllrecords.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+
+                                              {
+                                                  public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
+                                                      selectedItem = parent.getItemAtPosition(position).toString();
+                                                      Log.d("PARA-SEl",selectedItem);
+                                                      mRecordsList.clear();
+                                                      providers();
+                                                  }
+
+                                                  @Override
+                                                  public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                                  }
+
+                                              }
+        );
+                /*   mAllrecords.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
@@ -148,19 +169,17 @@ public class RecordFragment extends RootFragment {
             {
 
             }
-        });
+        });*/
         mBtnAddFiles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                  //  providers();
-                // openBottomSheet();
+                //  providers();
+                openBottomSheet();
             }
         });
-
         return view;
     }
-  /*  private void providers()   {
+    private void providers()   {
 
         //   appUtils.showProgressBarLoading();
 
@@ -169,15 +188,18 @@ public class RecordFragment extends RootFragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        // Log.d("PARA","APPPPPP");
 
                         JSONArray data = null;
                         JSONObject jsonArray = null;
                         try {
                             jsonArray = new JSONObject(response);
+                            //    Log.d("PARA", jsonArray.toString());
+
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                             data =jsonArray.optJSONArray("records");
+                        data =jsonArray.optJSONArray("records");
 
                         for (int i = 0 ; i < data.length() ; i++){
 
@@ -187,18 +209,65 @@ public class RecordFragment extends RootFragment {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            String x=jsonObject.optString("ori_name").toString();
-                            Toast.makeText(mContext,x,Toast.LENGTH_LONG).show();
+
+                            String  type = jsonObject.optString("record_type").toString();
+                            Log.d("PARA-type-outside",type);
+
+
+                            if (selectedItem.equalsIgnoreCase("All Records")){
+                                Log.d("PARA-type","IN IF");
+
+                                String oriName=jsonObject.optString("ori_name").toString();
+                                String recordType=jsonObject.optString("record_type").toString();
+                                String description=jsonObject.optString("description").toString();
+                                Log.d("PARA",oriName);
+                                // Toast.makeText(mContext,x,Toast.LENGTH_LONG).show();
+                                // saT.setImage(mContext.getResources().getString(R.string.base_url) + logo);
+                                Records records=new Records();
+                                records.setFname(oriName);
+                                records.setRecordtype(recordType);
+                                records.setDescription(description);
+                                Log.d("PARA",oriName);
+                                // Toast.makeText(mContext,x,Toast.LENGTH_LONG).show();
+                                // saT.setImage(mContext.getResources().getString(R.string.base_url) + logo);
+                                mRecordsList.add(records);
+                            }
+                            else
+                            {
+                                Log.d("PARA-type","IN else");
+                                if( selectedItem.equalsIgnoreCase(type) ){
+
+                                    Log.d("PARA-type","IN type");
+                                    String oriName=jsonObject.optString("ori_name").toString();
+                                    String recordType=jsonObject.optString("record_type").toString();
+                                    String description=jsonObject.optString("description").toString();
+                                    Log.d("PARA",oriName);
+                                    // Toast.makeText(mContext,x,Toast.LENGTH_LONG).show();
+                                    // saT.setImage(mContext.getResources().getString(R.string.base_url) + logo);
+                                    Records records=new Records();
+                                    records.setFname(oriName);
+                                    records.setRecordtype(recordType);
+                                    records.setDescription(description);
+                                    mRecordsList.add(records);
+                                }
+                                else{}
+                            }
+
+
                         }
-
-
+                        mRecordAdapter = new RecordAdapter(getActivity() , mRecordsList);
+                        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                        mRecRecords.setLayoutManager(mLayoutManager);
+                        mRecRecords.setItemAnimator(new DefaultItemAnimator());
+                        mRecRecords.setAdapter(mRecordAdapter);
+                        mRecRecords.setNestedScrollingEnabled(false);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
-                      //  appUtils.dismissProgressBar();
+                        //  appUtils.dismissProgressBar();
                     }
                 }) {
 
@@ -216,22 +285,20 @@ public class RecordFragment extends RootFragment {
                 // auth_token = "324cf5c7-67f7-489e-959d-5b98ea9c8b6a";
 
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("auth-token", auth_token);
+                params.put("auth-token", "c49143ff-20b5-4b54-b0ec-7d3326f6d813");
                 params.put("Content-Type", "application/x-www-form-urlencoded");
-
                 return params;
+
             }
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
-
-
-    }*/
+    }
     public void openBottomSheet() {
 
         View view = getLayoutInflater().inflate(R.layout.bottom_sheet, null);
-
+        // final Records records = mRecordsList.get(position);
         LinearLayout lnrPrescription = view.findViewById(R.id.lnrPrescription);
         LinearLayout lnrTestReport = view.findViewById(R.id.lnrTestReport);
         LinearLayout lnrScanImage = view.findViewById(R.id.lnrScanImage);
@@ -254,7 +321,7 @@ public class RecordFragment extends RootFragment {
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
-
+                mRecordsList.clear();
                 FragmentTransaction transaction = getFragmentManager()
                         .beginTransaction();
                 transaction.replace(R.id.root_records, new AddHealthRecordFragment());
@@ -277,14 +344,14 @@ public class RecordFragment extends RootFragment {
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
-
+                mRecordsList.clear();
                 FragmentTransaction transaction = getFragmentManager()
                         .beginTransaction();
                 transaction.replace(R.id.root_records, new AddHealthRecordFragment());
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.addToBackStack(null);
                 transaction.commit();
-           txtPrescription.setTextColor(mContext.getResources().getColor(R.color.black));
+                txtPrescription.setTextColor(mContext.getResources().getColor(R.color.black));
                 imgPrescription.setImageResource(R.drawable.prescription);
 
                 txtTestReport.setTextColor(mContext.getResources().getColor(R.color.bg));
@@ -300,14 +367,14 @@ public class RecordFragment extends RootFragment {
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
-
+                mRecordsList.clear();
                 FragmentTransaction transaction = getFragmentManager()
                         .beginTransaction();
                 transaction.replace(R.id.root_records, new AddHealthRecordFragment());
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 transaction.addToBackStack(null);
                 transaction.commit();
-              txtPrescription.setTextColor(mContext.getResources().getColor(R.color.black));
+                txtPrescription.setTextColor(mContext.getResources().getColor(R.color.black));
                 imgPrescription.setImageResource(R.drawable.prescription);
 
                 txtTestReport.setTextColor(mContext.getResources().getColor(R.color.black));

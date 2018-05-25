@@ -32,6 +32,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/imgServices"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:src="@drawable/ic_launcher_background" />
@@ -50,6 +51,7 @@
                             android:text="C T Scan"
                             android:textColor="@color/black"
                             android:textSize="18sp"
+                            android:id="@+id/depname"
                             android:textStyle="bold" />
 
                         <TextView
@@ -94,11 +96,12 @@
                 </FrameLayout>-->
 
                 <EditText
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:paddingRight="@dimen/activity_vertical_margin"
                     android:paddingLeft="@dimen/activity_vertical_margin"
-                    android:hint="Name of the patient"
+                    android:id="@+id/edtNotes"
+                    android:hint="Notes"
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -107,40 +110,40 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="79dp"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:textColor="@color/black"
                         android:id="@+id/txtDate"
-                        android:textSize="16sp"
-                        android:layout_marginRight="8dp"
-                        android:layout_weight="1"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:paddingRight="@dimen/activity_vertical_margin"
-                        android:paddingLeft="@dimen/activity_vertical_margin"
-                        android:hint="Select Date"
-                        android:gravity="center_vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="48dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittext_bg"
+                        android:gravity="center_vertical"
+                        android:hint="Select Date"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:paddingRight="@dimen/activity_vertical_margin"
                         android:singleLine="true"
-                        android:background="@drawable/edittext_bg"/>
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
 
                     <TextView
-                        android:textColor="@color/black"
                         android:id="@+id/txtTime"
-                        android:textSize="16sp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_weight="1"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:paddingRight="@dimen/activity_vertical_margin"
-                        android:paddingLeft="@dimen/activity_vertical_margin"
-                        android:hint="Time Slot"
-                        android:gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittext_bg"
+                        android:gravity="center_vertical"
+                        android:hint="Time Slot"
+                        android:paddingLeft="@dimen/activity_vertical_margin"
+                        android:paddingRight="@dimen/activity_vertical_margin"
                         android:singleLine="true"
-                        android:background="@drawable/edittext_bg"/>
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 

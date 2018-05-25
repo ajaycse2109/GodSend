@@ -5,16 +5,13 @@ import java.io.Serializable;
 /**
  * Created by pc on 3/14/18.
  */
+public class Records implements Serializable {
+    public Records(){}
 
-public class Records {
-        String fname, recordtype, description, recordfile;
-
-        public Records(String fname, String recordtype, String description, String recordfile) {
-            this.fname = fname;
-            this.recordtype = recordtype;
-            this.description = description;
-            this.recordfile = recordfile;
-        }
+    String fname ;
+    String recordtype ;
+    String description ;
+    String recordfile ;
 
     public String getFname() {
         return fname;

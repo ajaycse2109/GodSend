@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,17 +18,25 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.LinearLayout.LayoutParams;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,8 +62,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.oodi.godsend.R;
+import com.oodi.godsendapp.GlobalClass;
+import com.oodi.godsendapp.activity.MainActivity;
+import com.oodi.godsendapp.adapter.ProvidersAdapter;
 import com.oodi.godsendapp.fragment.RootFragment;
 import com.oodi.godsendapp.fragment.hospital.cunsultation.CScanAndTestFragment;
+import com.oodi.godsendapp.pojo.Providers;
 import com.oodi.godsendapp.util.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -62,11 +75,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,21 +96,36 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
     View view ;
     AppUtils appUtils;
 
+
+    @BindView(R.id.autoCompleteTextView)
+    AutoCompleteTextView mautoCompleteTextView;
     @BindView(R.id.mapView)
     MapView mMapView;
-    @BindView(R.id.cardNearestHospital)
-    CardView mCardNearestHospital ;
-    @BindView(R.id.cardPreferredHospital)
-    CardView mCardPreferredHospital;
-    @BindView(R.id.imgNearest)
-    ImageView mImgNearest;
-    @BindView(R.id.txtNearestName)
-    TextView mTxtNearestName ;
-    @BindView(R.id.imgPH)
-    ImageView mImgPH;
-    @BindView(R.id.txtPH)
-    TextView mTxtPH;
+//    @BindView(R.id.cardNearestHospital)
+//    CardView mCardNearestHospital ;
+//    @BindView(R.id.cardPreferredHospital)
+//    CardView mCardPreferredHospital;
+//    @BindView(R.id.imgNearest)
+//    ImageView mImgNearest;
+//   @BindView(R.id.txtNearestName)
+//    TextView mTxtNearestName ;
+//    @BindView(R.id.imgPH)
+//    ImageView mImgPH;
+//    @BindView(R.id.txtPH)
+//    TextView mTxtPH;
 
+
+
+    public List<Providers> providersList = new ArrayList<>();
+
+    public  List<String> mStrings = new ArrayList<String>();
+
+    @BindView(R.id.my_recycler_view)
+    public RecyclerView recyclerView;
+    public ProvidersAdapter mAdapter;
+
+    @BindView(R.id.lnrLayout)
+    LinearLayout mlnrLayout;
     private GoogleMap googleMap;
     boolean mLocationPermissionGranted = false;
     final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -107,11 +141,16 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_hospital, container, false);
         mContext = getActivity();
+
+        prepareProvidersData();
         ButterKnife.bind(this, view);
         appUtils = new AppUtils(mContext);
         getLocationPermission();
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately
+
+
+
 
         try {
             MapsInitializer.initialize(getActivity());
@@ -121,21 +160,144 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
 
         mMapView.getMapAsync(this);
 
-        mCardNearestHospital.setOnClickListener(new View.OnClickListener() {
+        mautoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = getFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.root_hospital, new CScanAndTestFragment());
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.addToBackStack(null);
-                transaction.commit();
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(mautoCompleteTextView.getText().toString() == "" || mautoCompleteTextView.getText() == null)
+                {
+                    mautoCompleteTextView.setHint("");
+                    return false;
+                }
+                else
+                {
+                    mautoCompleteTextView.setHint("Search for hospitals");
+                    return false;
+                }
             }
         });
+//        mCardNearestHospital.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FragmentTransaction transaction = getFragmentManager()
+//                        .beginTransaction();
+//                transaction.replace(R.id.root_hospital, new CScanAndTestFragment());
+//                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                transaction.addToBackStack(null);
+//                transaction.commit();
+//            }
+//        });
 
-        providers();
+        mAdapter = new ProvidersAdapter((FragmentActivity)mContext,providersList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
         return view;
+    }
+
+    public void prepareProvidersData() {
+
+
+//        appUtils.showProgressBarLoading();
+
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/providers/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONArray jsonArray = null;
+                        try {
+                            jsonArray = new JSONArray(response);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                        mStrings.clear();
+                        for (int i = 0 ; i < jsonArray.length() ; i++){
+
+
+                            JSONObject jsonObject = jsonArray.optJSONObject(i);
+
+                            String id = jsonObject.optString("id");
+                            String name = jsonObject.optString("name");
+                            String category = jsonObject.optString("category");
+                            String phone = jsonObject.optString("phone");
+                            String address = jsonObject.optString("address");
+                            String logo = jsonObject.optString("logo");
+
+                            mStrings.add(name);
+//globalClass.setProviderId(id);
+                            Providers p = new Providers();
+                            p.setName(name);
+                            p.setLogo(logo);
+                            p.setProviderid(id);
+                            providersList.add(p);
+
+
+//                            mTxtNearestName.setText(name);
+//                            Picasso.with(mContext)
+//                                    .load(logo)
+//                                    .fit().centerCrop()
+//                                    .into(mImgNearest);
+//                            mTxtPH.setText(name);
+//                            Picasso.with(mContext)
+//                                    .load(logo)
+//                                    .into(mImgPH);
+
+                        }
+
+                        mAdapter = new ProvidersAdapter(getActivity() , providersList);
+                        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                        recyclerView.setLayoutManager(mLayoutManager);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView.setAdapter(mAdapter);
+                        recyclerView.setNestedScrollingEnabled(false);
+
+                        String[] mStringArray = new String[mStrings.size()];
+                        mStringArray = mStrings.toArray(mStringArray);
+                        ArrayAdapter<String> Hospitaladapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mStringArray);
+                        mautoCompleteTextView.setThreshold(1);
+                        mautoCompleteTextView.setAdapter(Hospitaladapter);
+                        mautoCompleteTextView.setTextColor(Color.BLACK);
+               //         appUtils.dismissProgressBar();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                      //  appUtils.dismissProgressBar();
+                    }
+                }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", MODE_PRIVATE);
+                String auth_token = prefs.getString("auth_token", "");
+
+                // auth_token = "324cf5c7-67f7-489e-959d-5b98ea9c8b6a";
+
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+
+
+
     }
 
     @Override
@@ -370,85 +532,7 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
     }
 
     private void providers() {
-
-        appUtils.showProgressBarLoading();
-
-        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/providers/";
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        JSONArray jsonArray = null;
-                        try {
-                            jsonArray = new JSONArray(response);
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
-                        }
-
-                        for (int i = 0 ; i < jsonArray.length() ; i++){
-
-                            JSONObject jsonObject = jsonArray.optJSONObject(i);
-
-                            String id = jsonObject.optString("id");
-                            String name = jsonObject.optString("name");
-                            String category = jsonObject.optString("category");
-                            String phone = jsonObject.optString("phone");
-                            String address = jsonObject.optString("address");
-                            String logo = jsonObject.optString("logo");
-
-                            mTxtNearestName.setText(name);
-
-                            Picasso.with(mContext)
-                                    .load(logo)
-                                    .fit().centerCrop()
-                                    .into(mImgNearest);
-
-                            mTxtPH.setText(name);
-
-                            Picasso.with(mContext)
-                                    .load(logo)
-                                    .into(mImgPH);
-
-                        }
-
-                        appUtils.dismissProgressBar();
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
-                        appUtils.dismissProgressBar();
-                    }
-                }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=UTF-8";
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
-                String auth_token = prefs.getString("auth_token", "");
-
-               // auth_token = "324cf5c7-67f7-489e-959d-5b98ea9c8b6a";
-
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("auth-token", auth_token);
-                params.put("Content-Type", "application/x-www-form-urlencoded");
-
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        requestQueue.add(stringRequest);
-    }
+ }
 
     private void displayLocationSettingsRequest() {
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(mContext)

@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.activity.AmbulanceActivity;
+import com.oodi.godsendapp.activity.MainActivity;
 import com.oodi.godsendapp.adapter.AppointmentAdapter;
 import com.oodi.godsendapp.fragment.RootFragment;
 import com.oodi.godsendapp.pojo.Appointment;
@@ -73,7 +74,7 @@ public class AppointmentsFragment extends RootFragment {
         mBtnNewAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext , AmbulanceActivity.class);
+                Intent intent = new Intent(mContext , MainActivity.class);
                 startActivity(intent);
             }
         });

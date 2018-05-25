@@ -2,6 +2,7 @@ package com.oodi.godsendapp.fragment.hospital.cunsultation;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -48,14 +49,17 @@ public class CSaTReviewFragment extends RootFragment implements PaymentResultLis
 
     Activity mContext;
     View view ;
-
+String id;
     @BindView(R.id.lnrBack)
     LinearLayout mLnrBack ;
     @BindView(R.id.txtHeaderName)
     TextView mTxtHeaderName;
+    @BindView(R.id.depname)
+    TextView mdepname;
     @BindView(R.id.btnConfirm)
     Button mBtnConfirm;
-
+@BindView(R.id.txtNamePatient)
+TextView mtxtNamePatient;
     public CSaTReviewFragment() {
         // Required empty public constructor
     }
@@ -67,13 +71,21 @@ public class CSaTReviewFragment extends RootFragment implements PaymentResultLis
         view = inflater.inflate(R.layout.fragment_sa_treview, container, false);
         mContext = getActivity();
         ButterKnife.bind(this, view);
-        mTxtHeaderName.setText("Completed");
+        mTxtHeaderName.setText("Review");
+
         mLnrBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mContext.onBackPressed();
             }
         });
+        SharedPreferences pref = getActivity().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+        id = pref.getString("service_name", "");
+        String pname = pref.getString("prof_name","");
+        mtxtNamePatient.setText(pname);
+
+        Log.d("PARAM::", id);
+        mdepname.setText(id);
         mBtnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -204,5 +216,11 @@ public class CSaTReviewFragment extends RootFragment implements PaymentResultLis
         }
     }
 
+public void  getAppointmentDetails()
+{
 
+
+
+
+}
 }

@@ -6,7 +6,20 @@
     android:background="@color/white"
     android:orientation="vertical"
     tools:context="com.oodi.godsendapp.fragment.records.RecordFragment">
-    <include layout="@layout/common_header"/>
+    <TextView
+        android:id="@+id/t1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="Records"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_color"/>
+    <!--<include layout="@layout/common_header"/>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

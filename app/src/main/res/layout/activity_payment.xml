@@ -1,124 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFfff">
+    android:id="@+id/FrameId"
+    tools:context="com.oodi.godsendapp.activity.PaymentActivity">
 
     <include
         android:id="@+id/i1"
         layout="@layout/common_header" />
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/fee"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="100dp"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="0dp"
+        android:paddingTop="0dp"
+        android:text="Payment Successfull"
+        android:textColor="@color/bg"
+        android:textSize="12sp" />
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/FrameId">-->
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="110dp">
+    <!--</FrameLayout>-->
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginTop="100dp"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical">-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_alignParentBottom="true"
-                android:background="#E2E2E2"
-                android:gravity="center">
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="110dp">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="0dp"
-                    android:paddingTop="35dp"
-                    android:text="Order #RZP42"
-                    android:textColor="@color/bg"
-                    android:textSize="12sp" />
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="80dp"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:background="#E2E2E2"-->
+                <!--android:gravity="center">-->
 
-            </LinearLayout>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:paddingBottom="0dp"-->
+                    <!--android:paddingTop="35dp"-->
+                    <!--android:text="Order #RZP42"-->
+                    <!--android:textColor="@color/bg"-->
+                    <!--android:textSize="12sp" />-->
 
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/white_border_black_bg"
-                android:padding="15dp"
-                android:src="@drawable/user3" />
+            <!--</LinearLayout>-->
 
-        </RelativeLayout>
+            <!--<ImageView-->
+                <!--android:layout_width="60dp"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:background="@drawable/white_border_black_bg"-->
+                <!--android:padding="15dp"-->
+                <!--android:src="@drawable/user3" />-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#f2f2f2"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingTop="15dp">
+        <!--</RelativeLayout>-->
 
-            <TextView
-                android:id="@+id/dcname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="5dp"
-                android:paddingTop="0dp"
-                android:text="Pay to Dr. NAme"
-                android:textColor="@color/bg"
-                android:textSize="20sp" />
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="#f2f2f2"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical"-->
+            <!--android:paddingTop="15dp">-->
 
-            <TextView
-                android:id="@+id/fee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="0dp"
-                android:paddingTop="0dp"
-                android:text="INR 1.00"
-                android:textColor="@color/bg"
-                android:textSize="12sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/dcname"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:paddingBottom="5dp"-->
+                <!--android:paddingTop="0dp"-->
+                <!--android:text="Pay to Dr. NAme"-->
+                <!--android:textColor="@color/bg"-->
+                <!--android:textSize="20sp" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="0dp"
-                android:paddingTop="5dp"
-                android:text="This is a real transaction"
-                android:textColor="@color/bg"
-                android:textSize="12sp"
-                android:textStyle="italic" />
+            <!--<TextView-->
+                <!--android:id="@+id/fee"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:paddingBottom="0dp"-->
+                <!--android:paddingTop="0dp"-->
+                <!--android:text="INR 1.00"-->
+                <!--android:textColor="@color/bg"-->
+                <!--android:textSize="12sp" />-->
 
-            <Button
-                android:id="@+id/btn_pay"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/bg"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text="Pay"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:paddingBottom="0dp"-->
+                <!--android:paddingTop="5dp"-->
+                <!--android:text="This is a real transaction"-->
+                <!--android:textColor="@color/bg"-->
+                <!--android:textSize="12sp"-->
+                <!--android:textStyle="italic" />-->
 
-        </LinearLayout>
+            <!--<Button-->
+                <!--android:id="@+id/btn_pay"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="36dp"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginBottom="20dp"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:background="@color/bg"-->
+                <!--android:paddingLeft="20dp"-->
+                <!--android:paddingRight="20dp"-->
+                <!--android:text="Pay"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="14sp" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/secured_by_bg"
-            android:paddingBottom="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="10dp"
-            android:text="Secure Payments by Razorpay"
-            android:textColor="@color/colorPrimary"
-            android:textSize="12sp"
-            android:textStyle="italic" />
+        <!--</LinearLayout>-->
 
-    </LinearLayout>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:background="@drawable/secured_by_bg"-->
+            <!--android:paddingBottom="10dp"-->
+            <!--android:paddingLeft="20dp"-->
+            <!--android:paddingRight="20dp"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:text="Secure Payments by Razorpay"-->
+            <!--android:textColor="@color/colorPrimary"-->
+            <!--android:textSize="12sp"-->
+            <!--android:textStyle="italic" />-->
 
-</RelativeLayout>
+    <!--</LinearLayout>-->
+
+</FrameLayout>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -42,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -65,8 +68,21 @@ public class ProfileFragment extends RootFragment {
     CardView mCardMedicalRecord;
     @BindView(R.id.cardPreferences)
     CardView mCardPreferences;
+
+
     @BindView(R.id.edtNumber)
     EditText mEdtNumber;
+
+    @BindView(R.id.txtProfName)
+    TextView mtxtProfName;
+    @BindView(R.id.txtBloodgrp)
+    TextView mtxtBloodgrp;
+    @BindView(R.id.txtHeight)
+    TextView mtxtHeight;
+    @BindView(R.id.txtWeight)
+    TextView mtxtWeight;
+
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -127,7 +143,7 @@ public class ProfileFragment extends RootFragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext , LinearLayoutManager.HORIZONTAL , false);
         mRecAddress.setLayoutManager(layoutManager);
         mRecAddress.setAdapter(mAddressAdapter);
-
+        profile();
         return view;
     }
 
@@ -167,7 +183,7 @@ public class ProfileFragment extends RootFragment {
     }
     private void profile() {
 
-        appUtils.showProgressBarLoading();
+       // appUtils.showProgressBarLoading();
 
         String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/profile";
 
@@ -189,21 +205,30 @@ public class ProfileFragment extends RootFragment {
                         String phone = jsonObject.optString("phone");
                         String address = jsonObject.optString("address");
                         String dob = jsonObject.optString("dob");
-                        String emergency_contact_name = jsonObject.optString("emergency_contact_name");
+                       // String emergency_contact_name = jsonObject.optString("emergency_contact_name");
                         String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
 
                       //  mTxtName.setText(first_name);
                       //  mTxtDOB.setText(dob);
-                        mEdtNumber.setText(emergency_contact_name + " " + emergency_contact_phone);
-                        appUtils.dismissProgressBar();
+mtxtProfName.setText( first_name+" " + last_name);
+                        mEdtNumber.setText( emergency_contact_phone);
+
+                        SharedPreferences sharedpreferences = view.getContext().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("prof_name", first_name+" "+last_name);
+
+                        // Log.d("PARAM::ADAP", saT.getDepartment());
+
+                        editor.commit();
+                     //   appUtils.dismissProgressBar();
 
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
-                        appUtils.dismissProgressBar();
+//                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                      // appUtils.dismissProgressBar();
                     }
                 }) {
             @Override
@@ -217,7 +242,7 @@ public class ProfileFragment extends RootFragment {
                 SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
                 String auth_token = prefs.getString("auth_token", "");
 
-                auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
+               // auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("auth-token", auth_token);
                 params.put("Content-Type", "application/x-www-form-urlencoded");

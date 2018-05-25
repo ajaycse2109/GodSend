@@ -128,6 +128,7 @@ public class WalkthroughOneFragment extends Fragment {
             public void onClick(View view) {
 
                 profile();
+               // update_profile();
 
             }
         });
@@ -224,7 +225,7 @@ public class WalkthroughOneFragment extends Fragment {
                             gender ="F";
                         }
                         else  {
-                            mEdtGender.setText("Others");
+                            mEdtGender.setText("Other");
                             gender = "O";
                         }
                         return true;

@@ -2,6 +2,8 @@ package com.oodi.godsendapp.fragment.hospital.cunsultation;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ public class CReviewReservationFragment extends RootFragment {
     TextView mTxtHeaderName;
     @BindView(R.id.txtDepartment)
     TextView mTxtDepartment;
+
 
     public CReviewReservationFragment() {
         // Required empty public constructor
