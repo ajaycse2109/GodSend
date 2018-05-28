@@ -77,6 +77,7 @@ imgServ=itemView.findViewById(R.id.imgService);
                 editor.putString("service_name",department.getName());
                 editor.putString("service_type",department.getService_type());
                 editor.putString("service_img",department.getImage());
+                editor.putString("service_price",department.getPrice());
                 editor.commit();
                 MainActivity mainActivity = (MainActivity)mContext;
                 FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();

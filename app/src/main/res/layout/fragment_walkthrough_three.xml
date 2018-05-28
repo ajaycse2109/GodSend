@@ -7,26 +7,26 @@
 
     <LinearLayout
         android:id="@+id/lnrImg"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:gravity="center"
-            android:layout_marginRight="25dp"
-            android:layout_marginLeft="25dp"
-            android:text="Manage your\nappoinments.\nGet reminders.\nShare notes with the\ndoctor in the process."
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:layout_weight="3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ImageView
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/third_wt"/>
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="Manage your\nappoinments.\nGet reminders.\nShare notes with the\ndoctor in the process."
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/third_wt" />
 
     </LinearLayout>
 

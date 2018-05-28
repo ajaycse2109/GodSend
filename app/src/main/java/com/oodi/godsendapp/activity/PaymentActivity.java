@@ -2,6 +2,7 @@ package com.oodi.godsendapp.activity;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -84,13 +85,20 @@ public class PaymentActivity extends FragmentActivity implements PaymentResultLi
         final Checkout co = new Checkout();
 
         try {
+
+            SharedPreferences pref = this.getSharedPreferences("MY" , Context.MODE_PRIVATE);
+            String totalprice = pref.getString("service_price","");
+String id = pref.getString("service_name", "");
+            String pname = pref.getString("provider_name", "");
+            String plogo = pref.getString("provider_logo", "");
+
             JSONObject options = new JSONObject();
-            options.put("name", " Eoh Techservices Private Limited");
-            options.put("description", "Demoing Charges");
+            options.put("name", pname);
+            options.put("description", id);
             //You can omit the image option to fetch the image from dashboard
-            options.put("image", "https://rzp-mobile.s3.amazonaws.com/images/rzp.png");
+            options.put("image", plogo);
             options.put("currency", "INR");
-            options.put("amount", "10000");
+            options.put("amount", totalprice+"00");
 
             JSONObject preFill = new JSONObject();
             preFill.put("email", "");

@@ -101,7 +101,12 @@ public class HospitalFragment extends RootFragment implements OnMapReadyCallback
     AppUtils appUtils;
 public double latitude;
 public  double longitude;
-
+    public  static  int loc;
+    public static Float minDistance = null;
+    public List<Providers> providersList = new ArrayList<>();
+    public static  List<Location> locList = new ArrayList<>();
+    public static  Location source = new Location("");
+    public static  Location destination = new Location("");
     @BindView(R.id.autoCompleteTextView)
     AutoCompleteTextView mautoCompleteTextView;
     @BindView(R.id.mapView)
@@ -121,7 +126,7 @@ public  double longitude;
 
 
 
-    public List<Providers> providersList = new ArrayList<>();
+  //  public List<Providers> providersList = new ArrayList<>();
 
     public  List<String> mStrings = new ArrayList<String>();
 
@@ -146,7 +151,7 @@ public  double longitude;
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_hospital, container, false);
         mContext = getActivity();
-
+getUserLocation();
         prepareProvidersData();
         ButterKnife.bind(this, view);
         appUtils = new AppUtils(mContext);
@@ -203,7 +208,7 @@ public  double longitude;
 
         return view;
     }
-    public void getUserLocation()
+   /* public void getUserLocation()
     {
         // mtxtUseGPS.setImageResource(R.drawable.gps_selected);
         String address = "";
@@ -234,7 +239,7 @@ public  double longitude;
         // mEdtAddress.setText(address);
 // make sure you close the gps after using it. Save user's battery power
         mGPSService.closeGPS();
-    }
+    }*/
 
     public void prepareProvidersData() {
 
@@ -272,6 +277,11 @@ public  double longitude;
                             String logo = jsonObject.optString("logo");
 
                             mStrings.add(name);
+
+                            Location location = new Location("");
+                            location.setLatitude(Double.parseDouble(lat));
+                            location.setLongitude(Double.parseDouble(lon));
+                            locList.add(location);
 //globalClass.setProviderId(id);
                             Providers p = new Providers();
                             p.setName(name);
@@ -292,12 +302,50 @@ public  double longitude;
 
                         }
 
+
+
+                        minDistance =source.distanceTo(locList.get(0));
+                        for(int i=1;i<locList.size();i++)
+                        {
+                            destination = locList.get(i);
+
+                            Float Distance =source.distanceTo(destination);
+
+                            if(Distance < minDistance)
+                            {
+                                minDistance =Distance;
+                                loc = i;
+                            }
+
+                        }
+
+                        GPSService gpsService = new GPSService(mContext);
+                        String address = gpsService.getLocationAddress(locList.get(loc));
+                        String hospName = providersList.get(loc).get_hospitalName();
+                       // mtxtNearestHospital.setText(hospName+" , "+address);
+                        SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY" , Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("provider_id",providersList.get(loc).getProviderid());
+                        editor.putString("provider_name",providersList.get(loc).get_hospitalName());
+                        editor.putString("provider_logo",providersList.get(loc).getLogo());
+                        editor.putString("loc",String.valueOf(loc));
+                        editor.commit();
+
+
+
+Providers temp = providersList.get(loc);
+providersList.remove(loc);
+providersList.add(0,temp);
+
+
+
+
                         mAdapter = new ProvidersAdapter(getActivity() , providersList);
                         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
                         recyclerView.setLayoutManager(mLayoutManager);
                         recyclerView.setItemAnimator(new DefaultItemAnimator());
                         recyclerView.setAdapter(mAdapter);
-                        recyclerView.setNestedScrollingEnabled(false);
+                        recyclerView.setNestedScrollingEnabled(true);
 
                         String[] mStringArray = new String[mStrings.size()];
                         mStringArray = mStrings.toArray(mStringArray);
@@ -575,6 +623,40 @@ public  double longitude;
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    public void getUserLocation()
+    {
+        // mtxtUseGPS.setImageResource(R.drawable.gps_selected);
+        String address = "";
+        GPSService mGPSService = new GPSService(mContext);
+        mGPSService.getLocation();
+
+        if (mGPSService.isLocationAvailable == false) {
+
+            //getLocationPermission();
+            // Here you can ask the user to try again, using return; for that
+            // Toast.makeText(mContext, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
+            return;
+
+            // Or you can continue without getting the location, remove the return; above and uncomment the line given below
+            // address = "Location not available";
+        } else {
+
+            // Getting location co-ordinates
+            latitude = mGPSService.getLatitude();
+            longitude = mGPSService.getLongitude();
+            // Toast.makeText(mContext, "Latitude:" + latitude + " | Longitude: " + longitude, Toast.LENGTH_LONG).show();
+            source.setLatitude(latitude);
+            source.setLongitude(longitude);
+            address = mGPSService.getLocationAddress();
+           // mtxtPickup.setText(address);
+        }
+
+        //Toast.makeText(mContext, "Your address is: " + address, Toast.LENGTH_SHORT).show();
+        // mEdtAddress.setText(address);
+// make sure you close the gps after using it. Save user's battery power
+        mGPSService.closeGPS();
     }
 
 

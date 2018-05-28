@@ -124,10 +124,12 @@ public class WalkthroughFourFragment extends Fragment implements AdapterView.OnI
         mBtnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 session.setLogin(true);
+                getVitalInfo();
                 Intent intent = new Intent(mContext , MainActivity.class);
                 startActivity(intent);
-               // updateVitalInfo();
+
 
             }
         });
@@ -334,7 +336,7 @@ public class WalkthroughFourFragment extends Fragment implements AdapterView.OnI
 
         String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/vitalinfo/";
 
-        final StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+        final StringRequest stringRequest = new StringRequest(Request.Method.PUT, REGISTER_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -367,6 +369,128 @@ public class WalkthroughFourFragment extends Fragment implements AdapterView.OnI
                         //update_profile();
 
                         Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                        //appUtils.dismissProgressBar();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+
+                String allergies="";
+                String medicalcond = "";
+                if(mEdtHp1.getText().toString()!=null || !(mEdtHp1.getText().toString().isEmpty()))
+                {
+                    medicalcond = medicalcond + mEdtHp1.getText().toString();
+                }
+                if(mEdtHp2.getText().toString()!=null || mEdtHp2.getText().toString()!= "")
+                {
+                    medicalcond =medicalcond+","+ mEdtHp2.getText().toString();
+                }
+                if(mEdtHp3.getText().toString()!=null || mEdtHp3.getText().toString()!= "")
+                {
+                    medicalcond =medicalcond+","+ mEdtHp3.getText().toString();
+                }
+                if(mEdtHp4.getText().toString()!=null || mEdtHp4.getText().toString()!= "")
+                {
+                    medicalcond =medicalcond+","+ mEdtHp4.getText().toString();
+                }
+                if(mEdtHp5.getText().toString()!=null || mEdtHp5.getText().toString()!= "")
+                {
+                    medicalcond =medicalcond+","+ mEdtHp5.getText().toString();
+                }
+
+                if(mEdtHsp11.getText().toString()!=null || mEdtHsp11.getText().toString()!= "")
+                {
+                    allergies = allergies + mEdtHsp11.getText().toString();
+                }
+                if(mEdtHsp22.getText().toString()!=null || mEdtHsp22.getText().toString()!= "")
+                {
+                    allergies =allergies+","+ mEdtHsp22.getText().toString();
+                }
+                if(mEdtHsp33.getText().toString()!=null || mEdtHsp33.getText().toString()!= "")
+                {
+                    allergies =allergies+","+ mEdtHsp33.getText().toString();
+                }
+                if(mEdtHsp44.getText().toString()!=null || mEdtHsp44.getText().toString()!= "")
+                {
+                    allergies =allergies+","+ mEdtHsp44.getText().toString();
+                }
+                if(mEdtHsp55.getText().toString()!=null || mEdtHsp55.getText().toString()!= "")
+                {
+                    allergies =allergies+","+ mEdtHsp55.getText().toString();
+                }
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("height" , mhgt.getText().toString());
+                params.put("weight" ,mght.getText().toString() );
+                params.put("blood_group" , mspinner.getSelectedItem().toString());
+                params.put("medical_conditions" , allergies);
+                params.put("medications" , "");
+                params.put("allergies" ,medicalcond );
+//                params.put("last_name" , mEdtSecondName.getText().toString());
+
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                final String auth_token = prefs.getString("auth_token", "");
+
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+    public void vitalInfo()
+    {
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/vitalinfo/";
+
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+
+                        String status = jsonObject.optString("status");
+
+                        if (status.equals("success")){
+                            Intent intent = new Intent(mContext , MainActivity.class);
+                            startActivity(intent);
+//                            WalkthroughActivity.mImgBack.setVisibility(View.VISIBLE);
+//                            WalkthroughActivity.mTxtSkip.setVisibility(View.VISIBLE);
+//
+//                            WalkthroughActivity.mViewpager.setCurrentItem(1);
+                        }
+
+                        //  appUtils.dismissProgressBar();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //update_profile();
+                        updateVitalInfo();
+                        //Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
                         //appUtils.dismissProgressBar();
                     }
                 }) {
@@ -451,7 +575,6 @@ public class WalkthroughFourFragment extends Fragment implements AdapterView.OnI
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -486,5 +609,84 @@ public class WalkthroughFourFragment extends Fragment implements AdapterView.OnI
         // TODO Auto-generated method stub
 
     }
+
+
+    public void getVitalInfo()
+    {
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/vitalinfo/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+updateVitalInfo();
+                        String height = jsonObject.optString("height");
+                        String weight = jsonObject.optString("weight");
+                        String blood_group = jsonObject.optString("blood_group");
+                        String medical_conditions = jsonObject.optString("medical_conditions");
+                        String medications = jsonObject.optString("medications");
+                        String allergies = jsonObject.optString("allergies");
+                        // String emergency_contact_name = jsonObject.optString("emergency_contact_name");
+                        // String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
+//mAddressList.add(address);
+                        //  mTxtName.setText(first_name);
+                        //  mTxtDOB.setText(dob);
+//                    mtxtProfName.setText( first_name+" " + last_name);
+//                    mEdtNumber.setText( emergency_contact_phone);
+                      //  mtxtHeight.setText(height);
+                      //  mtxtWeight.setText(weight);
+                      //  mtxtBloodgrp.setText(blood_group);
+
+
+//                    SharedPreferences sharedpreferences = view.getContext().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                        //editor.putString("prof_name", first_name+" "+last_name);
+
+                        // Log.d("PARAM::ADAP", saT.getDepartment());
+
+                        //editor.commit();
+                        //   appUtils.dismissProgressBar();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                        // appUtils.dismissProgressBar();
+                        vitalInfo();
+                    }
+                }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                String auth_token = prefs.getString("auth_token", "");
+
+                // auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
 
 }

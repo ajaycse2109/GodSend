@@ -38,6 +38,7 @@ import com.oodi.godsendapp.util.AppUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,6 +145,7 @@ public class ProfileFragment extends RootFragment {
         mRecAddress.setLayoutManager(layoutManager);
         mRecAddress.setAdapter(mAddressAdapter);
         profile();
+        getVitalInfo();
         return view;
     }
 
@@ -181,7 +183,7 @@ public class ProfileFragment extends RootFragment {
             }
         }
     }
-    private void profile() {
+    public void profile() {
 
        // appUtils.showProgressBarLoading();
 
@@ -207,7 +209,7 @@ public class ProfileFragment extends RootFragment {
                         String dob = jsonObject.optString("dob");
                        // String emergency_contact_name = jsonObject.optString("emergency_contact_name");
                         String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
-
+//mAddressList.add(address);
                       //  mTxtName.setText(first_name);
                       //  mTxtDOB.setText(dob);
 mtxtProfName.setText( first_name+" " + last_name);
@@ -254,6 +256,80 @@ mtxtProfName.setText( first_name+" " + last_name);
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
+public void getVitalInfo()
+{
+    String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/vitalinfo/";
 
+    StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = new JSONObject(response);
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    String height = jsonObject.optString("height");
+                    String weight = jsonObject.optString("weight");
+                    String blood_group = jsonObject.optString("blood_group");
+                    String medical_conditions = jsonObject.optString("medical_conditions");
+                    String medications = jsonObject.optString("medications");
+                    String allergies = jsonObject.optString("allergies");
+                    // String emergency_contact_name = jsonObject.optString("emergency_contact_name");
+                   // String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
+//mAddressList.add(address);
+                    //  mTxtName.setText(first_name);
+                    //  mTxtDOB.setText(dob);
+//                    mtxtProfName.setText( first_name+" " + last_name);
+//                    mEdtNumber.setText( emergency_contact_phone);
+mtxtHeight.setText(height);
+mtxtWeight.setText(weight);
+mtxtBloodgrp.setText(blood_group);
+
+
+//                    SharedPreferences sharedpreferences = view.getContext().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    //editor.putString("prof_name", first_name+" "+last_name);
+
+                    // Log.d("PARAM::ADAP", saT.getDepartment());
+
+                    //editor.commit();
+                    //   appUtils.dismissProgressBar();
+
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                    // appUtils.dismissProgressBar();
+                }
+            }) {
+        @Override
+        public String getBodyContentType() {
+            return "application/x-www-form-urlencoded; charset=UTF-8";
+        }
+
+        @Override
+        public Map<String, String> getHeaders() throws AuthFailureError {
+
+            SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+            String auth_token = prefs.getString("auth_token", "");
+
+            // auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("auth-token", auth_token);
+            params.put("Content-Type", "application/x-www-form-urlencoded");
+
+            return params;
+        }
+    };
+
+    RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+    requestQueue.add(stringRequest);
+}
 }
 

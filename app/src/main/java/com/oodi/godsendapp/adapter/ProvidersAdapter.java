@@ -78,6 +78,8 @@ Picasso.with(mContext).load(saT.getLogo()).fit().centerCrop().into(holder.txtimg
                 SharedPreferences sharedpreferences = view.getContext().getSharedPreferences("MY" , Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString("providerId", saT.getProviderid());
+                editor.putString("provider_name", saT.get_hospitalName());
+                editor.putString("provider_logo",saT.getLogo());
                // Log.d("PARAM::ADAP", saT.getDepartment());
 
                 editor.commit();

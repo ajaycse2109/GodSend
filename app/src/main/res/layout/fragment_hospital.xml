@@ -86,13 +86,13 @@ android:backgroundTint="@android:color/transparent"
             android:id="@+id/lnrLayout">
 
             <TextView
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_vertical_margin"
-                android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_vertical_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:text="Nearest hospitals"
                 android:textColor="@color/black"
-                android:text="Nearest hospitals"/>
+                android:textSize="16sp" />
 
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"

@@ -43,6 +43,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,7 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.activity.AppHelper;
+import com.oodi.godsendapp.activity.MainActivity;
 import com.oodi.godsendapp.activity.VolleyMultipartRequest;
 import com.oodi.godsendapp.activity.VolleySingleton;
 import com.oodi.godsendapp.activity.WalkthroughActivity;
@@ -169,6 +171,7 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
         view = inflater.inflate(R.layout.fragment_medical_records, container, false);
         mContext = getActivity();
         ButterKnife.bind(this, view);
+        getVitalInfo();
         appUtils = new AppUtils(mContext);
         SharedPreferences prefs = mContext.getSharedPreferences("Login", MODE_PRIVATE);
         final String auth_token = prefs.getString("auth_token", "");
@@ -217,6 +220,7 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
             @Override
             public void onClick(View view) {
 
+                updateVitalInfo();
                 //attachfile();
                // saveProfileAccount();
             }
@@ -354,6 +358,132 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
         });
         return view;
     }
+
+
+    public void updateVitalInfo()
+    {
+        //appUtils.showProgressBarLoading();
+
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/vitalinfo/";
+
+        final StringRequest stringRequest = new StringRequest(Request.Method.PUT, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+
+                        String status = jsonObject.optString("status");
+
+                        if (status.equals("success")){
+                            Intent intent = new Intent(mContext , MainActivity.class);
+                            startActivity(intent);
+//                            WalkthroughActivity.mImgBack.setVisibility(View.VISIBLE);
+//                            WalkthroughActivity.mTxtSkip.setVisibility(View.VISIBLE);
+//
+//                            WalkthroughActivity.mViewpager.setCurrentItem(1);
+                        }
+
+                        //  appUtils.dismissProgressBar();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //update_profile();
+
+                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                        //appUtils.dismissProgressBar();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+
+                String allergies="";
+                String medicalcond = "";
+                if(mEdtHp1.getText().toString()!=null || !(mEdtHp1.getText().toString().isEmpty()))
+                {
+                    medicalcond = medicalcond + mEdtHp1.getText().toString();
+                }
+                if(mEdtHp2.getText().toString()!=null || mEdtHp2.getText().toString()!= "")
+                {
+                    medicalcond =medicalcond+","+ mEdtHp2.getText().toString();
+                }
+                if(mEdtHp3.getText().toString()!=null || mEdtHp3.getText().toString()!= "")
+                {
+                    medicalcond =medicalcond+","+ mEdtHp3.getText().toString();
+                }
+                if(mEdtHp4.getText().toString()!=null || mEdtHp4.getText().toString()!= "")
+                {
+                    medicalcond =medicalcond+","+ mEdtHp4.getText().toString();
+                }
+                if(mEdtHp5.getText().toString()!=null || mEdtHp5.getText().toString()!= "")
+                {
+                    medicalcond =medicalcond+","+ mEdtHp5.getText().toString();
+                }
+
+                if(mEdtHsp11.getText().toString()!=null || mEdtHsp11.getText().toString()!= "")
+                {
+                    allergies = allergies + mEdtHsp11.getText().toString();
+                }
+                if(mEdtHsp22.getText().toString()!=null || mEdtHsp22.getText().toString()!= "")
+                {
+                    allergies =allergies+","+ mEdtHsp22.getText().toString();
+                }
+                if(mEdtHsp33.getText().toString()!=null || mEdtHsp33.getText().toString()!= "")
+                {
+                    allergies =allergies+","+ mEdtHsp33.getText().toString();
+                }
+                if(mEdtHsp44.getText().toString()!=null || mEdtHsp44.getText().toString()!= "")
+                {
+                    allergies =allergies+","+ mEdtHsp44.getText().toString();
+                }
+                if(mEdtHsp55.getText().toString()!=null || mEdtHsp55.getText().toString()!= "")
+                {
+                    allergies =allergies+","+ mEdtHsp55.getText().toString();
+                }
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("height" , mhgt.getText().toString());
+                params.put("weight" ,mght.getText().toString() );
+                params.put("blood_group" , mspinner.getSelectedItem().toString());
+                params.put("medical_conditions" , allergies);
+                params.put("medications" , "");
+                params.put("allergies" ,medicalcond );
+//                params.put("last_name" , mEdtSecondName.getText().toString());
+
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                final String auth_token = prefs.getString("auth_token", "");
+
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
 
    private void attachfile() {
 
@@ -526,6 +656,132 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
 
+    }
+
+
+
+    public void getVitalInfo()
+    {
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/vitalinfo/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+
+                        String height = jsonObject.optString("height");
+                        String weight = jsonObject.optString("weight");
+                        String blood_group = jsonObject.optString("blood_group");
+                        String medical_conditions = jsonObject.optString("medical_conditions");
+                        String medications = jsonObject.optString("medications");
+                        String allergies = jsonObject.optString("allergies");
+                        // String emergency_contact_name = jsonObject.optString("emergency_contact_name");
+                        // String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
+//mAddressList.add(address);
+                        //  mTxtName.setText(first_name);
+                        //  mTxtDOB.setText(dob);
+//                    mtxtProfName.setText( first_name+" " + last_name);
+//                    mEdtNumber.setText( emergency_contact_phone);
+                        List<EditText> edtArray1 = new ArrayList<>();
+                        edtArray1.add(mEdtHsp11);
+                        edtArray1.add(mEdtHsp22);
+                        edtArray1.add(mEdtHsp33);
+                        edtArray1.add(mEdtHsp44);
+                        edtArray1.add(mEdtHsp55);
+
+                        List<EditText> edtArray2 = new ArrayList<>();
+                        edtArray2.add(mEdtHp1);
+                        edtArray2.add(mEdtHp2);
+                        edtArray2.add(mEdtHp3);
+                        edtArray2.add(mEdtHp4);
+                        edtArray2.add(mEdtHp5);
+
+
+
+
+
+                        List<String> medicalCond = Arrays.asList(medical_conditions.split(","));
+                        List<String> allergg = Arrays.asList(allergies.split(","));
+
+for(int i=0;i<medicalCond.size();i++)
+{
+    EditText et1 = edtArray1.get(i);
+    et1.setText(medicalCond.get(i));
+    et1.setVisibility(View.VISIBLE);
+}
+
+                        for(int i=0;i<allergg.size();i++)
+                        {
+                            EditText et2 = edtArray2.get(i);
+                            et2.setText(allergg.get(i));
+                            et2.setVisibility(View.VISIBLE);
+                        }
+
+                        mhgt.setText(height);
+                        mght.setText(weight);
+                       // mEdtHsp11.setText(medical_conditions);
+                       // mEdtHp1.setText(allergies);
+                        mspinner.setSelection(getIndex(mspinner, blood_group));
+
+                        //private method of your class
+
+
+//                    SharedPreferences sharedpreferences = view.getContext().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                        //editor.putString("prof_name", first_name+" "+last_name);
+
+                        // Log.d("PARAM::ADAP", saT.getDepartment());
+
+                        //editor.commit();
+                        //   appUtils.dismissProgressBar();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                        // appUtils.dismissProgressBar();
+                    }
+                }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                String auth_token = prefs.getString("auth_token", "");
+
+                // auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+    private int getIndex(Spinner spinner, String myString){
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                return i;
+            }
+        }
+
+        return 0;
     }
 
     public void onNothingSelected(AdapterView<?> arg0) {

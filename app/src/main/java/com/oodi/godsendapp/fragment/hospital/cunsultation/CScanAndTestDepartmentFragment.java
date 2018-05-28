@@ -51,6 +51,7 @@ public class CScanAndTestDepartmentFragment extends RootFragment {
     Activity mContext;
     View view ;
     String id;
+    String pid;
     CDepartmentAdapter cDepartmentAdapter;
     @BindView(R.id.lnrBack)
     LinearLayout mLnrBack ;
@@ -80,7 +81,8 @@ public class CScanAndTestDepartmentFragment extends RootFragment {
         });
         SharedPreferences pref = getActivity().getSharedPreferences("MY" , Context.MODE_PRIVATE);
         id = pref.getString("depart_name", "");
-        Log.d("PARAM::", id);
+         pid = pref.getString("providerId","");
+       // Log.d("PARAM::", id);
         mTxtHeaderName.setText(id);
         cDepartmentAdapter = new CDepartmentAdapter(mContext , departmentList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
@@ -92,7 +94,7 @@ public class CScanAndTestDepartmentFragment extends RootFragment {
 
     private void providers() {
         //appUtils.showProgressBarLoading();
-        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/services/1";
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/services/"+pid;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
                 new Response.Listener<String>() {

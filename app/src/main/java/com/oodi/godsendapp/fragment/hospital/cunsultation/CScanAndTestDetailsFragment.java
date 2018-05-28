@@ -205,6 +205,8 @@ public class CScanAndTestDetailsFragment extends RootFragment {
 dates = year+"-"+month+"-"+day;
                             }
                         }, mYear, mMonth, mDay);
+
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                 datePickerDialog.show();
             }
         });

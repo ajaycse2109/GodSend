@@ -53,7 +53,9 @@ public class CSaTReviewFragment extends RootFragment implements PaymentResultLis
 
     Activity mContext;
     View view ;
-String id;
+String id,totalprice;
+@BindView(R.id.txtPrices)
+TextView mtxtPrices;
 @BindView(R.id.appmntId)
 TextView mappmntId;
     @BindView(R.id.lnrBack)
@@ -89,6 +91,8 @@ TextView mtxtNamePatient;
         SharedPreferences pref = getActivity().getSharedPreferences("MY" , Context.MODE_PRIVATE);
         id = pref.getString("service_name", "");
         String pname = pref.getString("prof_name","");
+        totalprice = pref.getString("service_price","");
+        mtxtPrices.setText(totalprice);
         mtxtNamePatient.setText(pname);
 
         Log.d("PARAM::", id);
