@@ -774,9 +774,10 @@ for(int i=0;i<medicalCond.size();i++)
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
-    private int getIndex(Spinner spinner, String myString){
+    public int getIndex(Spinner spinner, String myString){
         for (int i=0;i<spinner.getCount();i++){
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+            String item= spinner.getItemAtPosition(i).toString();
+            if (item.equals(myString)){
                 return i;
             }
         }
