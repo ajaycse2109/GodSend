@@ -11,6 +11,16 @@ public class Appointment implements Serializable {
 
     public  String appCode;
     public String provName;
+    public String logo;
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
 
 
     public String getAppCode() {

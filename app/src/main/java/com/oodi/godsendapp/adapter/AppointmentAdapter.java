@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oodi.godsend.R;
@@ -18,6 +19,7 @@ import com.oodi.godsendapp.fragment.hospital.cunsultation.CScanAndTestDepartment
 import com.oodi.godsendapp.pojo.Appointment;
 import com.oodi.godsendapp.pojo.Department;
 import com.oodi.godsendapp.pojo.Records;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -40,6 +42,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtCancelAppointment , txtMsg , txtStatus , txtTime , txtName;
+        ImageView txtImg;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -49,6 +52,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             txtName=itemView.findViewById(R.id.txtPName);
             txtStatus = itemView.findViewById(R.id.txtStatus);
             txtTime = itemView.findViewById(R.id.txtTime);
+txtImg=itemView.findViewById(R.id.Img);
           //  txtBook = itemView.findViewById(R.id.txtBook);
 
         }
@@ -81,6 +85,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             final Appointment appointment = appointmentList.get(position);
 
             holder.txtName.setText(appointment.provName);
+        Picasso.with(mContext).load(appointment.getLogo()).fit().centerCrop().into(holder.txtImg);
         //}
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

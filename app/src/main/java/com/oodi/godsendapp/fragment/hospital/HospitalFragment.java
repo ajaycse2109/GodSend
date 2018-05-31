@@ -29,11 +29,14 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -173,21 +176,63 @@ getUserLocation();
         mautoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(mautoCompleteTextView.getText().toString() == "" || mautoCompleteTextView.getText() == null)
-                {
-                    mautoCompleteTextView.setHint("");
-                    return false;
-                }
-                else
-                {
-                    mautoCompleteTextView.setHint("Search For Hospitals");
-                    return false;
-                }
+                mautoCompleteTextView.setHint("");
+                return false;
             }
         });
 
+mautoCompleteTextView.addTextChangedListener(new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
 
+String name = charSequence.toString();
+
+if(!name.isEmpty()) {
+    List<Providers> filterlist = new ArrayList<>();
+    for (int x = 0; x < providersList.size(); x++) {
+
+        Providers p = providersList.get(x);
+        if (p.get_hospitalName().toLowerCase().contains(name)) {
+            filterlist.add(p);
+        }
+    }
+//    providersList.clear();
+//
+//        for (Providers p : filterlist
+//                ) {
+//            providersList.add(p);
+//        }
+
+    mAdapter = new ProvidersAdapter((FragmentActivity) mContext, filterlist);
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+    recyclerView.setLayoutManager(mLayoutManager);
+    recyclerView.setItemAnimator(new DefaultItemAnimator());
+    recyclerView.setAdapter(mAdapter);
+}
+else
+{
+    providersList.clear();
+    prepareProvidersData();
+    mAdapter = new ProvidersAdapter((FragmentActivity) mContext, providersList);
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+    recyclerView.setLayoutManager(mLayoutManager);
+    recyclerView.setItemAnimator(new DefaultItemAnimator());
+    recyclerView.setAdapter(mAdapter);
+}
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+});
 //        mCardNearestHospital.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -282,11 +327,26 @@ getUserLocation();
                             location.setLatitude(Double.parseDouble(lat));
                             location.setLongitude(Double.parseDouble(lon));
                             locList.add(location);
+                            Float dist = source.distanceTo(location)/1000;
+                            Double tim = (dist / 20.5)*60.0;
+                            String time="";
+                            int hr=0,min=Integer.parseInt(tim.toString().split("\\.",2)[0]);
+
+                            if(min > 60)
+                            {
+                                hr=hr+1;
+                                min=min-60;
+                            }
+                            time = String.valueOf(hr) +"hr "+String.valueOf(min)+"mins";
 //globalClass.setProviderId(id);
                             Providers p = new Providers();
                             p.setName(name);
                             p.setLogo(logo);
                             p.setProviderid(id);
+                            p.setLat(lat);
+                            p.setLon(lon);
+                            p.setDistance(String.valueOf(dist).substring(0,4));
+                            p.setTime(time);
                             providersList.add(p);
 
 
@@ -325,7 +385,7 @@ getUserLocation();
                        // mtxtNearestHospital.setText(hospName+" , "+address);
                         SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY" , Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("provider_id",providersList.get(loc).getProviderid());
+                        editor.putString("providerId",providersList.get(loc).getProviderid());
                         editor.putString("provider_name",providersList.get(loc).get_hospitalName());
                         editor.putString("provider_logo",providersList.get(loc).getLogo());
                         editor.putString("loc",String.valueOf(loc));
@@ -347,12 +407,12 @@ providersList.add(0,temp);
                         recyclerView.setAdapter(mAdapter);
                         recyclerView.setNestedScrollingEnabled(true);
 
-                        String[] mStringArray = new String[mStrings.size()];
-                        mStringArray = mStrings.toArray(mStringArray);
-                        ArrayAdapter<String> Hospitaladapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mStringArray);
-                        mautoCompleteTextView.setThreshold(1);
-                        mautoCompleteTextView.setAdapter(Hospitaladapter);
-                        mautoCompleteTextView.setTextColor(Color.BLACK);
+//                        String[] mStringArray = new String[mStrings.size()];
+//                        mStringArray = mStrings.toArray(mStringArray);
+//                        ArrayAdapter<String> Hospitaladapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mStringArray);
+//                        mautoCompleteTextView.setThreshold(1);
+//                        mautoCompleteTextView.setAdapter(Hospitaladapter);
+//                        mautoCompleteTextView.setTextColor(Color.BLACK);
 
                //         appUtils.dismissProgressBar();
                     }

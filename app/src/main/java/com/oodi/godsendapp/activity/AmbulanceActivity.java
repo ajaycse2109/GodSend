@@ -1,5 +1,4 @@
 package com.oodi.godsendapp.activity;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +7,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -19,13 +21,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,14 +45,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.oodi.godsendapp.activity.GPSService;
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.adapter.ProvidersAdapter;
 import com.oodi.godsendapp.fragment.hospital.ReviewReservationFragment;
@@ -57,17 +68,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.android.volley.VolleyLog.TAG;
-
 public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public  static  int loc;
@@ -79,6 +91,16 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
     public static Activity mContext;
     private GoogleMap.OnCameraIdleListener onCameraIdleListener;
     private GoogleMap mMap;
+  //  private CustomMapFragment mCustomMapFragment;
+
+    private View mMarkerParentView;
+    private ImageView mMarkerImageView;
+
+    private int imageParentWidth = -1;
+    private int imageParentHeight = -1;
+    private int imageHeight = -1;
+    private int centerX = -1;
+    private int centerY = -1;
     public double latitude;
     public double longitude;
     @BindView(R.id.lnrBack)
@@ -102,22 +124,12 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         setContentView(R.layout.activity_ambulance);
         mContext = this;
         ButterKnife.bind(mContext);
-
-        getUserLocation();
+        configureCameraIdle();
         prepareProvidersData();
-   //     getHospitalLocation();
-      //  configureCameraIdle();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        getUserLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
-
-
-
-
-
 
         mLnrBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,20 +151,13 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         mTxtConfirmBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 book();
-
-
-
                 /*Intent intent = new Intent(mContext , RouteActivity.class);
                 startActivity(intent);*/
             }
         });
 
     }
-
-
     public  void book()
     {
         String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/appointment/add/";
@@ -200,7 +205,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
                 SharedPreferences pref = mContext.getSharedPreferences("MY" , Context.MODE_PRIVATE);
                 String    pid = pref.getString("provider_id", "");
                 String name= pref.getString("prof_name","");
-               // String sid=pref.getString("services_id","");
+                // String sid=pref.getString("services_id","");
                 String notes= "";
                 if(notes == null)
                     notes="";
@@ -236,18 +241,15 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
-
-
     public void getUserLocation()
     {
         // mtxtUseGPS.setImageResource(R.drawable.gps_selected);
-          String address = "";
+        String address = "";
         GPSService mGPSService = new GPSService(mContext);
         mGPSService.getLocation();
 
         if (mGPSService.isLocationAvailable == false) {
-
-           //getLocationPermission();
+            //getLocationPermission();
             // Here you can ask the user to try again, using return; for that
             // Toast.makeText(mContext, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
             return;
@@ -257,23 +259,43 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         } else {
 
             // Getting location co-ordinates
-             latitude = mGPSService.getLatitude();
-             longitude = mGPSService.getLongitude();
+            latitude = mGPSService.getLatitude();
+            longitude = mGPSService.getLongitude();
             // Toast.makeText(mContext, "Latitude:" + latitude + " | Longitude: " + longitude, Toast.LENGTH_LONG).show();
-source.setLatitude(latitude);
-source.setLongitude(longitude);
-             address = mGPSService.getLocationAddress();
-             mtxtPickup.setText(address);
+            source.setLatitude(latitude);
+            source.setLongitude(longitude);
+            address = mGPSService.getLocationAddress();
+            // mtxtPickup.setText(address);
         }
 
         //Toast.makeText(mContext, "Your address is: " + address, Toast.LENGTH_SHORT).show();
         // mEdtAddress.setText(address);
 // make sure you close the gps after using it. Save user's battery power
-        mGPSService.closeGPS();
+        //mGPSService.closeGPS();
     }
+    private void configureCameraIdle() {
+        onCameraIdleListener = new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                LatLng latLng = mMap.getCameraPosition().target;
+                latitude = latLng.latitude;
+                longitude=latLng.longitude;
+                Geocoder geocoder = new Geocoder(AmbulanceActivity.this);
+                try {
+                    List<Address> addressList = geocoder.getFromLocation(latitude,longitude, 1);
+                    if (addressList != null && addressList.size() > 0) {
+                        String locality = addressList.get(0).getAddressLine(0);
+                        String country = addressList.get(0).getCountryName();
+                        if (!locality.isEmpty() && !country.isEmpty())
+                            mtxtPickup.setText(locality + "  " + country);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-
-
+            }
+        };
+    }
     public void prepareProvidersData() {
 
 
@@ -296,10 +318,7 @@ source.setLongitude(longitude);
                         }
                         locList.clear();
                         for (int i = 0 ; i < jsonArray.length() ; i++){
-
-
                             JSONObject jsonObject = jsonArray.optJSONObject(i);
-
                             String id = jsonObject.optString("id");
                             String name = jsonObject.optString("name");
                             String lat=jsonObject.optString("lat");
@@ -308,16 +327,15 @@ source.setLongitude(longitude);
                             String phone = jsonObject.optString("phone");
                             String address = jsonObject.optString("address");
                             String logo = jsonObject.optString("logo");
-
                             Location location = new Location("");
                             location.setLatitude(Double.parseDouble(lat));
                             location.setLongitude(Double.parseDouble(lon));
                             locList.add(location);
 //globalClass.setProviderId(id);
-                           Providers p = new Providers();
+                            Providers p = new Providers();
                             p.setName(name);
                             p.setLogo(logo);
-                           p.setProviderid(id);
+                            p.setProviderid(id);
                             providersList.add(p);
 
 
@@ -406,9 +424,6 @@ source.setLongitude(longitude);
 
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
-
-
-
     }
     public void startPayment() {
         /**
@@ -453,16 +468,13 @@ source.setLongitude(longitude);
     public void onPaymentSuccess(String razorpayPaymentID) {
 
         mRelay.setVisibility(View.INVISIBLE);
-            Toast.makeText(mContext, "Payment Successful: " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
-       ReviewReservationFragment fragment = new ReviewReservationFragment();
-      getSupportFragmentManager().beginTransaction().add(R.id.FrameId,fragment).commitAllowingStateLoss();
+        Toast.makeText(mContext, "Payment Successful: " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
+        ReviewReservationFragment fragment = new ReviewReservationFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.FrameId,fragment).commitAllowingStateLoss();
 
         //Intent intent = new Intent(this,MainActivity.class);
-     //   startActivityForResult(intent,100);
-
-
+        //   startActivityForResult(intent,100);
     }
-
     /**
      * The name of the function has to be
      * onPaymentError
@@ -476,9 +488,7 @@ source.setLongitude(longitude);
             Log.e(TAG, "Exception in onPaymentError", e);
         }
     }
-
-
-    private void configureCameraIdle() {
+   /* private void configureCameraIdle() {
         onCameraIdleListener = new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
@@ -487,12 +497,9 @@ source.setLongitude(longitude);
                 latitude = latLng.latitude;
                 longitude=latLng.longitude;
                // Geocoder geocoder = new Geocoder(MapsActivity.this);
-
             }
         };
-    }
-
-
+    }*/
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -503,53 +510,35 @@ source.setLongitude(longitude);
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
-      //  mMap.setOnCameraIdleListener(onCameraIdleListener);
-//
-//        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-//            @Override
-//            public void onCameraIdle() {
-//              CameraPosition p =  mMap.getCameraPosition();
-//              latitude=p.target.latitude;
-//              longitude=p.target.longitude;
-//            }
-//        });
-
-
-
         LatLng sydney = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+        mMap.setOnCameraIdleListener(onCameraIdleListener);
+        // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+
+          /*  mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.gps_selected))
+
+                    .draggable(true));*/
 
         //For zooming automatically to the location of the marker
         CameraPosition cameraPosition ;
-
         cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
 
-mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-    @Override
-    public void onMarkerDragStart(Marker marker) {
-
+            }
+            @Override
+            public void onMarkerDrag(Marker marker) {
+            }
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                LatLng  l = marker.getPosition();
+                latitude = l.latitude;
+                longitude =l.longitude;
+            }
+        });
     }
-
-    @Override
-    public void onMarkerDrag(Marker marker) {
-
-
-
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        LatLng  l = marker.getPosition();
-        latitude = l.latitude;
-        longitude =l.longitude;
-    }
-});
-
-    }
-
-
 }

@@ -75,6 +75,8 @@ public class WalkthroughOneFragment extends Fragment implements  LocationListene
     Activity mContext ;
     View view ;
     AppUtils appUtils;
+    String contactNumber = null;
+    String contactName = null;
     boolean mLocationPermissionGranted = false;
     final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private int mYear, mMonth, mDay;
@@ -384,8 +386,7 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
                 case RESULT_PICK_CONTACT:
                     Cursor cursor = null;
                     try {
-                        String contactNumber = null;
-                        String contactName = null;
+
 // getData() method will have the
 // Content Uri of the selected contact
                         Uri uri = data.getData();
@@ -403,7 +404,7 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
                         contactName = cursor.getString(nameIndex);
 // Set the value to the textviews
 // tvContactName.setText("Contact Name : ".concat(contactName));
-                        mEdtNumber.setText(contactName);
+                        mEdtNumber.setText(contactName +" "+contactNumber);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -477,8 +478,8 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
                 params.put("gender" , gender);
                 params.put("address" , mEdtAddress.getText().toString());
                 params.put("dob" , DOB);
-                params.put("emergency_contact_phone" , mEdtNumber.getText().toString());
-                params.put("emergency_contact_name" , "Test");
+                params.put("emergency_contact_phone" , contactNumber);
+                params.put("emergency_contact_name" , contactName);
                 params.put("first_name" , mEdtFirstName.getText().toString());
                 params.put("last_name" , mEdtSecondName.getText().toString());
 
@@ -542,8 +543,8 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
-                         appUtils.dismissProgressBar();
+                      //  Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                       //  appUtils.dismissProgressBar();
                     }
                 }) {
             @Override
@@ -552,8 +553,8 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
                 params.put("gender" , gender);
                 params.put("address" , mEdtAddress.getText().toString());
                 params.put("dob" , DOB);
-                params.put("emergency_contact_phone" , mEdtNumber.getText().toString());
-                params.put("emergency_contact_name" , "Test");
+                params.put("emergency_contact_phone" , contactNumber);
+                params.put("emergency_contact_name" , contactName);
                 params.put("first_name" , mEdtFirstName.getText().toString());
                 params.put("last_name" , mEdtSecondName.getText().toString());
 
@@ -582,6 +583,83 @@ mtxtUseGPS.setOnClickListener(new View.OnClickListener() {
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
+
+
+
+    public void getProfile()
+    {
+        // appUtils.showProgressBarLoading();
+
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/profile";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+
+                        String gender = jsonObject.optString("gender");
+                        String first_name = jsonObject.optString("first_name");
+                        String last_name = jsonObject.optString("last_name");
+                        String phone = jsonObject.optString("phone");
+                        String address = jsonObject.optString("address");
+                        String dob = jsonObject.optString("dob");
+                        // String emergency_contact_name = jsonObject.optString("emergency_contact_name");
+                        String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
+//mAddressList.add(address);
+                        //  mTxtName.setText(first_name);
+                        //  mTxtDOB.setText(dob);
+                        //mtxtProfName.setText( first_name+" " + last_name);
+                      //  mEdtNumber.setText( emergency_contact_phone);
+
+                        SharedPreferences sharedpreferences = view.getContext().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("prof_name", first_name+" "+last_name);
+
+                        // Log.d("PARAM::ADAP", saT.getDepartment());
+
+                        editor.commit();
+                        //   appUtils.dismissProgressBar();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                        // appUtils.dismissProgressBar();
+                    }
+                }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                String auth_token = prefs.getString("auth_token", "");
+
+                // auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
 
 
     @Override

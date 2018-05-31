@@ -46,12 +46,12 @@ public class WalkthroughActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new WalkthroughOneFragment(), "");
-        adapter.addFragment(new WalkthroughTwoFragment(), "");
+        //adapter.addFragment(new WalkthroughTwoFragment(), "");
         //adapter.addFragment(new WalkthroughThreeFragment(), "");
         adapter.addFragment(new WalkthroughFourFragment(), "");
         mViewpager.setAdapter(adapter);
 
-        mViewpager.setOffscreenPageLimit(2);
+        mViewpager.setOffscreenPageLimit(1);
 
         mIndicator.setupWithViewPager(mViewpager);
         //mIndicator.addOnPageChangeListener(mOnPageChangeListener);

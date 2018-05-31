@@ -88,6 +88,7 @@
                     android:visibility="gone" />
 
                 <TextView
+                    android:id="@+id/txtDateTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="15:12 May 23 2018"
@@ -266,19 +267,19 @@ android:id="@+id/txtPrices"
     </LinearLayout>
 
     <LinearLayout
-        android:gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:padding="@dimen/activity_vertical_margin">
 
         <Button
             android:id="@+id/btnConfirm"
-            android:textColor="@color/white"
-            android:text="PROCEED TO PAYMENT"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_bg"/>
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/button_bg"
+            android:text="PROCEED TO PAYMENT"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

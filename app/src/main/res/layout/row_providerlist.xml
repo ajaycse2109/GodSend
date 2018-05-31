@@ -64,7 +64,7 @@
 
                     <TextView
                         android:textSize="10sp"
-
+android:id="@+id/txtTime"
                         android:layout_marginLeft="3dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
 
                     <TextView
                         android:textSize="10sp"
-
+android:id="@+id/txtDist"
                         android:layout_marginLeft="3dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -89,18 +89,18 @@
                         android:text="0.2 km"
                         android:textStyle="bold"/>
 
-                    <TextView
-                        android:textColor="@color/bg"
-                        android:layout_marginLeft="10dp"
-                        android:textSize="10sp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/button_bg_"
-                        android:text="NAVIGATE"/>
+                    <!--<TextView-->
+                        <!--android:textColor="@color/bg"-->
+                        <!--android:layout_marginLeft="10dp"-->
+                        <!--android:textSize="10sp"-->
+                        <!--android:paddingLeft="12dp"-->
+                        <!--android:paddingRight="12dp"-->
+                        <!--android:paddingTop="3dp"-->
+                        <!--android:paddingBottom="3dp"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:background="@drawable/button_bg_"-->
+                        <!--android:text="NAVIGATE"/>-->
 
                 </LinearLayout>
 

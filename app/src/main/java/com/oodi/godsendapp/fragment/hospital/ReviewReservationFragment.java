@@ -38,7 +38,11 @@ import com.oodi.godsendapp.pojo.Records;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +72,10 @@ public class ReviewReservationFragment extends RootFragment {
     TextView mtxtpatName;
     @BindView(R.id.buttonOk)
     Button mbtnOk;
+    @BindView(R.id.timeText)
+    TextView mtimeText;
+    @BindView(R.id.dateText)
+    TextView mdateText;
     public ReviewReservationFragment() {
         // Required empty public constructor
     }
@@ -82,11 +90,15 @@ public class ReviewReservationFragment extends RootFragment {
         ButterKnife.bind(this, view);
         getAppointmentDetails();
       //  mTxtHeaderName.setText("Completed");
-        SharedPreferences pref = getActivity().getSharedPreferences("MY" , Context.MODE_PRIVATE);
-      //  String    sername = pref.getString("service_name", "");
-        String name= pref.getString("prof_name","");
-//        String appid = pref.getString("app_code","");
-        mtxtpatName.setText(name);
+//        SharedPreferences pref = getActivity().getSharedPreferences("MY" , Context.MODE_PRIVATE);
+//      //  String    sername = pref.getString("service_name", "");
+//        String name= pref.getString("prof_name","");
+//        String datetime = pref.getString("dtString","");
+//
+//        mtimeText.setText(datetime.substring(0,5));
+//        mdateText.setText(datetime.substring(6));
+////        String appid = pref.getString("app_code","");
+//        mtxtpatName.setText(name);
     //    mappmntFor.setText(sername);
 //        mLnrBack.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -136,9 +148,20 @@ mbtnOk.setOnClickListener(new View.OnClickListener() {
 
                         JSONArray data=null;
                         data = appObject.optJSONArray("appointment_details");
+                        mtxtpatName.setText(pname);
+String dateTime = appObject.optString("booked_for");
+mtimeText.setText(dateTime.substring(11,16));
+                        int monthNumber = Integer.parseInt(dateTime.substring(5,7));
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.MONTH, monthNumber-1);
 
-
-
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM");
+                        simpleDateFormat.setCalendar(calendar);
+                     String   monthName = simpleDateFormat.format(calendar.getTime()).substring(0,3);
+                        String date = dateTime.substring(8,10);
+                        String year = dateTime.substring(0,4);
+                        String dateText = monthName+" "+date+" "+year;
+mdateText.setText(dateText);
 
 
                         for (int i = 0 ; i < data.length() ; i++){

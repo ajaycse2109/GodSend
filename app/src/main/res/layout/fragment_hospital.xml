@@ -35,41 +35,40 @@
                     android:layout_width="match_parent"
                     android:layout_height="280dp" />
 
-                <android.support.v7.widget.CardView
-                    app:cardCornerRadius="@dimen/activity_vertical_margin"
-                    android:layout_marginLeft="55dp"
-                    android:layout_marginRight="55dp"
-                    android:layout_marginTop="25dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:background="@null"
-                        android:hint="Search For Hospitals"
-                        android:paddingLeft="@dimen/activity_vertical_margin"
-                        android:paddingRight="@dimen/activity_vertical_margin"
-                        android:textColorHint="@color/black"
-                        android:textSize="14sp"
-                        android:visibility="gone" />
 
                     <AutoCompleteTextView
+                        android:imeOptions="actionDone"
+                        android:inputType="textAutoComplete"
                         android:id="@+id/autoCompleteTextView"
-                        android:layout_marginTop="5dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:hint="Search For Hospitals"
-                        android:gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_below="@+id/txtCopy"
                         android:singleLine="true"
-android:backgroundTint="@android:color/transparent"
-                        />
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:textAllCaps="true"
+                        android:drawableRight="@drawable/searchimg"
+                        android:hint="Search For Hospitals"
+                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="32dp"
+                        android:layout_marginLeft="32dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/search_bg_img"/>
+                    <!--<AutoCompleteTextView-->
+                        <!--android:id="@+id/autoCompleteTextView"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:drawableRight="@drawable/searchimg"-->
+                        <!--android:backgroundTint="@android:color/transparent"-->
+                        <!--android:gravity="fill"-->
+                        <!--android:hint="Search For Hospitals"-->
+                        <!--android:paddingLeft="5dp"-->
+                        <!--android:paddingRight="5dp"-->
+                        <!--android:singleLine="true" />-->
 
-                </android.support.v7.widget.CardView>
+
 
             </FrameLayout>
 

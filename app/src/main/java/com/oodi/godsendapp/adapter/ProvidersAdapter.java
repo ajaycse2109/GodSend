@@ -39,7 +39,7 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersAdapter.MyVi
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtViewTeam;//txtdepname;
+        TextView txtViewTeam,txtDistance,txtTimes;//txtdepname;
         ImageView txtimg;
 
         public MyViewHolder(View itemView) {
@@ -47,6 +47,8 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersAdapter.MyVi
             txtViewTeam = itemView.findViewById(R.id.txtNearestName);
            // txtdepname = itemView.findViewById(R.id.depname);
               txtimg = itemView.findViewById(R.id.imgNearest);
+              txtDistance = itemView.findViewById(R.id.txtDist);
+              txtTimes = itemView.findViewById(R.id.txtTime);
         }
     }
 
@@ -70,6 +72,8 @@ public class ProvidersAdapter extends RecyclerView.Adapter<ProvidersAdapter.MyVi
        // holder.txtViewTeam.setText("VIEW SERVICES");
       //  holder.txtdepname.setText(saT.getDepartment());
         holder.txtViewTeam.setText(saT.get_hospitalName());
+        holder.txtDistance.setText(saT.getDistance()+"km");
+holder.txtTimes.setText(saT.getTime());
 Picasso.with(mContext).load(saT.getLogo()).fit().centerCrop().into(holder.txtimg);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -37,6 +37,7 @@ import com.razorpay.PaymentResultListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormatSymbols;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +69,9 @@ TextView mappmntId;
     Button mBtnConfirm;
 @BindView(R.id.txtNamePatient)
 TextView mtxtNamePatient;
+@BindView(R.id.txtDateTime)
+TextView mtxtDateTime;
+
     public CSaTReviewFragment() {
         // Required empty public constructor
     }
@@ -92,6 +96,29 @@ TextView mtxtNamePatient;
         id = pref.getString("service_name", "");
         String pname = pref.getString("prof_name","");
         totalprice = pref.getString("service_price","");
+        String datetime = pref.getString("dtString","");
+//        String yr = datetime.substring(0,4);
+//        String mnt = datetime.substring(5,7);
+//        String dt = datetime.substring(8,10);
+//        String tm = datetime.substring(11,16);
+//        String month="SEP";
+//        DateFormatSymbols dfs = new DateFormatSymbols();
+//        String[] months = dfs.getMonths();
+//        if (Integer.parseInt(mnt) >= 0 &&Integer.parseInt(mnt) <= 11 )
+//        {
+//            month = months[Integer.parseInt(mnt)];
+//        }
+//month=month.substring(0,3);
+//
+//        String finalDate = tm +" "+ month+" " +dt+" "+yr;
+
+        mtxtDateTime.setText(datetime);
+//        SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY" , Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedpreferences.edit();
+//        editor.putString("finalDateTime",finalDate);
+//        editor.commit();
+
+
         mtxtPrices.setText(totalprice);
         mtxtNamePatient.setText(pname);
 

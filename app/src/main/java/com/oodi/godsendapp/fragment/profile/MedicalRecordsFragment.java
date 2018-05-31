@@ -777,7 +777,7 @@ for(int i=0;i<medicalCond.size();i++)
     public int getIndex(Spinner spinner, String myString){
         for (int i=0;i<spinner.getCount();i++){
             String item= spinner.getItemAtPosition(i).toString();
-            if (item.equals(myString)){
+            if (item.replace(" ","").equalsIgnoreCase(myString.replace(" ","").replace("ve",""))){
                 return i;
             }
         }

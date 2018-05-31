@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +28,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.adapter.CSaTAdapter;
+import com.oodi.godsendapp.adapter.ProvidersAdapter;
 import com.oodi.godsendapp.fragment.RootFragment;
 import com.oodi.godsendapp.pojo.Department;
+import com.oodi.godsendapp.pojo.Providers;
 import com.oodi.godsendapp.pojo.SaT;
 import com.squareup.picasso.Picasso;
 
@@ -82,6 +86,56 @@ public class CScanAndTestFragment extends RootFragment implements Response.Liste
             }
         });
         // mEdtSearch.setText("Search for Departments");
+
+        mEdtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+
+                String name = charSequence.toString();
+
+                if(!name.isEmpty()) {
+                    List<SaT> filterlist = new ArrayList<>();
+                    for (int x = 0; x < avatarList.size(); x++) {
+
+                        SaT p = avatarList.get(x);
+                        if (p.getDepartment().toLowerCase().contains(name)) {
+                            filterlist.add(p);
+                        }
+                    }
+
+                    saTAdapter = new CSaTAdapter(getActivity() , filterlist);
+                    final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                    mRecSaT.setLayoutManager(mLayoutManager);
+                    mRecSaT.setItemAnimator(new DefaultItemAnimator());
+                    mRecSaT.setAdapter(saTAdapter);
+                    mRecSaT.setNestedScrollingEnabled(false);
+                }
+                else
+                {
+
+                    providers();
+                    saTAdapter = new CSaTAdapter(getActivity() , avatarList);
+                    final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                    mRecSaT.setLayoutManager(mLayoutManager);
+                    mRecSaT.setItemAnimator(new DefaultItemAnimator());
+                    mRecSaT.setAdapter(saTAdapter);
+                    mRecSaT.setNestedScrollingEnabled(false);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         saTAdapter = new CSaTAdapter(getActivity(), avatarList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mRecSaT.setLayoutManager(mLayoutManager);
@@ -89,11 +143,17 @@ public class CScanAndTestFragment extends RootFragment implements Response.Liste
         providers();
         return view;
     }
+
+
+
+
     private void providers() {
 
         //appUtils.showProgressBarLoading();
+        SharedPreferences prefs = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+        String pid = prefs.getString("providerId", "");
 
-        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/services/1";
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/services/"+pid;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
                 new Response.Listener<String>() {

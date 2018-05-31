@@ -48,6 +48,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class CScanAndTestDetailsFragment extends RootFragment {
     Activity mContext;
     View view;
     String id;
-    public String dates,times,dt;
+    public String dates=null,times=null,dt;
     private int mYear, mMonth, mDay;
     android.app.AlertDialog alertDialog ;
     String[] mTimeSlotList = {"09:00-09:30",
@@ -274,9 +275,30 @@ String notes= medtNotes.getText().toString();
 if(notes == null)
     notes="";
 
+dt=dates +" "+times.substring(0,5);
+
+String time = times.substring(0,5);
+String monthName;
+int monthNumber = Integer.parseInt(dates.substring(5,7));
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.MONTH, monthNumber-1);
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM");
+                simpleDateFormat.setCalendar(calendar);
+                monthName = simpleDateFormat.format(calendar.getTime()).substring(0,3);
+
+                String date = dates.substring(8,10);
+                String year = dates.substring(0,4);
+
+                String dtString = time +" "+monthName+" "+date+" "+year;
+                SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY" , Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString("dtString",dtString);
+                editor.commit();
+
                 params.put("provider_id" , pid);
                 params.put("appointment_details" , "[{\"service_id\":"+sid+", \"quantity\": 1}]");
-                params.put("booked_for" , "2018-05-09 12:00");
+                params.put("booked_for" , dt);
                 params.put("patient_name" , name);
                 params.put("note" ,notes );
                 params.put("appointment_type" , "1");
@@ -381,6 +403,7 @@ if(notes == null)
                 String item_name = intent.getStringExtra("item_name");
 
                 mTxtTime.setText(item_name);
+                times = item_name;
 
                 try {
                     alertDialog.dismiss();

@@ -47,7 +47,7 @@ public class AppointmentsFragment extends RootFragment {
 
     Activity mContext;
     View view ;
-
+String provLogo="",provName="",code="";
     List<Appointment> mUpcomingList = new ArrayList<>();
     AppointmentAdapter mUpcomingAppointmentAdapter ;
 
@@ -73,7 +73,8 @@ public class AppointmentsFragment extends RootFragment {
         view = inflater.inflate(R.layout.fragment_appointments, container, false);
         mContext = getActivity();
         ButterKnife.bind(this, view);
-        providers();
+       providers();
+      //  allAppmnts();
 
 
 
@@ -126,8 +127,9 @@ JSONObject appObject=null;
                         JSONArray data=null;
                         data = appObject.optJSONArray("appointment_details");
 
-
-
+JSONObject provData = null;
+                        provData = appObject.optJSONObject("provider");
+                        provLogo = provData.optString("logo");
 
 
                         for (int i = 0 ; i < data.length() ; i++){
@@ -153,6 +155,7 @@ JSONObject appObject=null;
                         SharedPreferences.Editor editor = sharedpreferences.edit();
                         editor.putString("app_code",code);
                         editor.putString("prov_name",provName);
+                        editor.putString("prov_logo",provLogo);
 
                         // Log.d("PARAM::ADAP", saT.getDepartment());
 
@@ -161,6 +164,7 @@ JSONObject appObject=null;
                         Appointment appmnt = new Appointment();
                         appmnt.setAppCode(code);
                         appmnt.setProvName(provName);
+                        appmnt.setLogo(provLogo);
                         mUpcomingList.add(appmnt);
 
                         mUpcomingAppointmentAdapter = new AppointmentAdapter(getActivity()  , mUpcomingList );
@@ -190,6 +194,110 @@ JSONObject appObject=null;
                 String auth_token = prefs.getString("auth_token", "");
 
                 // auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+
+    public void allAppmnts()
+    {
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/appointment/all/";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                        JSONArray appArray=null;
+
+                        appArray=jsonObject.optJSONArray("appointments");
+
+for(int i=0;i<appArray.length();i++)
+{
+    JSONObject obj1 = null;
+    try {
+        obj1 = appArray.getJSONObject(i);
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
+code = obj1.optString("code");
+
+    JSONObject provObj = null;
+    provObj = obj1.optJSONObject("provider");
+    provLogo =provObj.optString("logo");
+
+JSONArray appDetArray = null;
+appDetArray = obj1.optJSONArray("appointment_details");
+
+for (int j=0;j<appDetArray.length();j++)
+{
+    JSONObject appDetObj = null;
+    try {
+        appDetObj = appDetArray.getJSONObject(i);
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
+
+    JSONObject serObj=null;
+     serObj = appDetObj.optJSONObject("service");
+
+   provName = serObj.optString("name");
+
+
+}
+
+
+
+}
+
+                        Appointment appmnt = new Appointment();
+                        appmnt.setAppCode(code);
+                        appmnt.setProvName(provName);
+                        appmnt.setLogo(provLogo);
+                        mUpcomingList.add(appmnt);
+
+                        mUpcomingAppointmentAdapter = new AppointmentAdapter(getActivity()  , mUpcomingList );
+
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+                        mRecUpcoming.setLayoutManager(layoutManager);
+                        mRecUpcoming.setAdapter(mUpcomingAppointmentAdapter);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                        // appUtils.dismissProgressBar();
+                    }
+                }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                String auth_token = prefs.getString("auth_token", "");
+
+                 auth_token = "a74e423a-a573-40ca-9f10-ef81c86c4b6b";
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("auth-token", auth_token);
                 params.put("Content-Type", "application/x-www-form-urlencoded");

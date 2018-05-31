@@ -127,8 +127,8 @@ public class WalkthroughFourFragment extends Fragment implements AdapterView.OnI
 
                 session.setLogin(true);
                 getVitalInfo();
-                Intent intent = new Intent(mContext , MainActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(mContext , MainActivity.class);
+//                startActivity(intent);
 
 
             }

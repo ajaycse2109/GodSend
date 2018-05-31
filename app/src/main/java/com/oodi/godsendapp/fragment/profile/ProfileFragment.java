@@ -31,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.oodi.godsend.R;
+import com.oodi.godsendapp.activity.WalkthroughActivity;
 import com.oodi.godsendapp.adapter.AddressAdapter;
 import com.oodi.godsendapp.fragment.RootFragment;
 import com.oodi.godsendapp.pojo.Address;
@@ -67,8 +68,8 @@ public class ProfileFragment extends RootFragment {
     RecyclerView mRecAddress;
     @BindView(R.id.cardMedicalRecord)
     CardView mCardMedicalRecord;
-    @BindView(R.id.cardPreferences)
-    CardView mCardPreferences;
+    @BindView(R.id.cardLogout)
+    CardView mCardLogout;
 
 
     @BindView(R.id.edtNumber)
@@ -109,23 +110,26 @@ public class ProfileFragment extends RootFragment {
             }
         });
 
-        mCardPreferences.setOnClickListener(new View.OnClickListener() {
+        mCardLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction transaction = getFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.root_profile, new PreferencesFragment());
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+
+                logout();
+//                FragmentTransaction transaction = getFragmentManager()
+//                        .beginTransaction();
+//                transaction.replace(R.id.root_profile, new PreferencesFragment());
+//                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                transaction.addToBackStack(null);
+//                transaction.commit();
             }
         });
         mImgEmergency_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+//                Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+//                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+//                startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
 
 
             }
@@ -207,13 +211,13 @@ public class ProfileFragment extends RootFragment {
                         String phone = jsonObject.optString("phone");
                         String address = jsonObject.optString("address");
                         String dob = jsonObject.optString("dob");
-                       // String emergency_contact_name = jsonObject.optString("emergency_contact_name");
+                       String emergency_contact_name = jsonObject.optString("emergency_contact_name");
                         String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
 //mAddressList.add(address);
                       //  mTxtName.setText(first_name);
                       //  mTxtDOB.setText(dob);
 mtxtProfName.setText( first_name+" " + last_name);
-                        mEdtNumber.setText( emergency_contact_phone);
+                        mEdtNumber.setText(emergency_contact_name+" "+ emergency_contact_phone);
 
                         SharedPreferences sharedpreferences = view.getContext().getSharedPreferences("MY" , Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -256,6 +260,15 @@ mtxtProfName.setText( first_name+" " + last_name);
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
+
+
+    public void logout()
+    {
+
+
+    }
+
+
 public void getVitalInfo()
 {
     String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/vitalinfo/";
