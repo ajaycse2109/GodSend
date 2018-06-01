@@ -1,6 +1,10 @@
 package com.oodi.godsendapp.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -18,7 +22,7 @@ import com.oodi.godsend.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RouteActivity extends FragmentActivity implements OnMapReadyCallback {
+public class RouteActivity extends FragmentActivity {
 
     Activity mContext;
 
@@ -26,6 +30,10 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
 
     @BindView(R.id.txtCancel)
     TextView mTxtCancel;
+@BindView(R.id.txtEmerHospital)
+TextView mtxtEnerHospital;
+@BindView(R.id.txtCall)
+TextView mtxtCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +41,32 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_route);
         mContext = this;
         ButterKnife.bind(mContext);
+        SharedPreferences pref = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+        String name = pref.getString("provider_name", "");
+        mtxtEnerHospital.setText(name);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+       // SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+         //       .findFragmentById(R.id.map);
+     //   mapFragment.getMapAsync(this);
 
         mTxtCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AmbulanceActivity.mContext.finish();
-                finish();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:0123456789"));
+                startActivity(intent);
+//                AmbulanceActivity.mContext.finish();
+//                finish();
+            }
+        });
+        mtxtCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:0123456789"));
+                startActivity(intent);
+//                AmbulanceActivity.mContext.finish();
+//                finish();
             }
         });
     }
@@ -57,14 +81,6 @@ public class RouteActivity extends FragmentActivity implements OnMapReadyCallbac
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        LatLng sydney = new LatLng(12.9716, 77.5946);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-        //For zooming automatically to the location of the marker
-        CameraPosition cameraPosition ;
-        cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
+
+
 }

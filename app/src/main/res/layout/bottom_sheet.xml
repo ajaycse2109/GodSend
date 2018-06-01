@@ -20,11 +20,11 @@
 
             <ImageView
                 android:id="@+id/imgPrescription"
-                android:padding="5dp"
-                android:layout_gravity="center"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/prescription"/>
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:src="@drawable/prescriptionp" />
 
             <TextView
                 android:id="@+id/txtPrescription"

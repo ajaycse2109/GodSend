@@ -285,7 +285,7 @@ public class RecordFragment extends RootFragment {
                 // auth_token = "324cf5c7-67f7-489e-959d-5b98ea9c8b6a";
 
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("auth-token", "c49143ff-20b5-4b54-b0ec-7d3326f6d813");
+                params.put("auth-token", auth_token);
                 params.put("Content-Type", "application/x-www-form-urlencoded");
                 return params;
 

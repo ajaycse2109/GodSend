@@ -221,8 +221,8 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
             public void onClick(View view) {
 
                 updateVitalInfo();
-                //attachfile();
-               // saveProfileAccount();
+             //   attachfile();
+                saveProfileAccount();
             }
         });
         mght.setOnTouchListener(new View.OnTouchListener() {
@@ -243,51 +243,7 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
             }
 
         });
-     /*   mEdtHsp11.setOnTouchListener(new View.OnTouchListener() {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mEdtHsp11.setHint("");
-                return false;
-            }
-
-        });
-        mEdtHsp22.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mEdtHsp22.setHint("");
-                return false;
-            }
-
-        });
-        mEdtHp1.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mEdtHp1.setHint("");
-                return false;
-            }
-
-        });
-        mEdtHp2.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mEdtHp2.setHint("");
-                return false;
-            }
-
-        });
-        mEdtHp3.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mEdtHp3.setHint("");
-                return false;
-            }
-
-        });*/
         mtxtAddmore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -381,8 +337,9 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
                         String status = jsonObject.optString("status");
 
                         if (status.equals("success")){
-                            Intent intent = new Intent(mContext , MainActivity.class);
-                            startActivity(intent);
+                            Toast.makeText(mContext,"Vital info updated",Toast.LENGTH_LONG).show();
+//                            Intent intent = new Intent(mContext , MainActivity.class);
+////                            startActivity(intent);
 //                            WalkthroughActivity.mImgBack.setVisibility(View.VISIBLE);
 //                            WalkthroughActivity.mTxtSkip.setVisibility(View.VISIBLE);
 //
@@ -489,7 +446,7 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
 
         appUtils.showProgressBarLoading();
 
-        String SAVECHANGES_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/vitalinfo/";
+        String SAVECHANGES_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/upload/";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SAVECHANGES_URL,
                 new Response.Listener<String>() {
@@ -561,93 +518,64 @@ public class MedicalRecordsFragment extends RootFragment implements AdapterView.
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
-//    private void saveProfileAccount() {
-//        // loading or check internet connection or something...
-//        // ... then
-//        String SAVECHANGES_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/upload/";
-//        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, SAVECHANGES_URL, new Response.Listener<NetworkResponse>() {
-//            @Override
-//            public void onResponse(NetworkResponse response) {
-//                        String resultResponse = new String(response.data);
-//                        try {
-//                            JSONObject result = new JSONObject(resultResponse);
-//                            String status = result.getString("status");
-//                            if (status.equals("success")) {
-//                                Toast.makeText(mContext , "image file updated" , Toast.LENGTH_LONG).show();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        NetworkResponse networkResponse = error.networkResponse;
-//                        String errorMessage = "Unknown error";
-//                        if (networkResponse == null) {
-//                            if (error.getClass().equals(TimeoutError.class)) {
-//                                errorMessage = "Request timeout";
-//                            } else if (error.getClass().equals(NoConnectionError.class)) {
-//                                errorMessage = "Failed to connect server";
-//                            }
-//                        } else {
-//                            String result = new String(networkResponse.data);
-//                            try {
-//                                JSONObject response = new JSONObject(result);
-//                                String status = response.getString("status");
-//                                String message = response.getString("message");
-//
-//                                Log.e("Error Status", status);
-//                                Log.e("Error Message", message);
-//
-//                                if (networkResponse.statusCode == 404) {
-//                                    errorMessage = "Resource not found";
-//                                } else if (networkResponse.statusCode == 401) {
-//                                    errorMessage = message+" Please login again";
-//                                } else if (networkResponse.statusCode == 400) {
-//                                    errorMessage = message+ " Check your inputs";
-//                                } else if (networkResponse.statusCode == 500) {
-//                                    errorMessage = message+" Something is getting wrong";
-//                                }
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                        Log.i("Error", errorMessage);
-//                        error.printStackTrace();
-//                    }
-//                }) {
-//                    @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//
-//                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
-//                final String auth_token = prefs.getString("auth_token", "");
-//
-//                Map<String, String>  params = new HashMap<String, String>();
-//                params.put("auth_token", auth_token);
-//                params.put("record_type" ,"PRESCRIPTION");
-//                params.put("file_name" , "filenametesting.pdf");
-//                params.put("description" , "medicalstesting");
-//               // params.put("name", mNameInput.getText().toString());
-//               // params.put("location", mLocationInput.getText().toString());
-//              //  params.put("about", mAvatarInput.getText().toString());
-//              //  params.put("contact", mContactInput.getText().toString());
-//                return params;
-//            }
-//            @Override
-//            protected Map<String, DataPart> getByteData() {
-//                Map<String, DataPart> params = new HashMap<>();
-//                // file name could found file base or direct access from real path
-//                // for now just get bitmap data from ImageView
-//                params.put("recfile", new DataPart("file_avatar.jpg", AppHelper.getFileDataFromDrawable(mContext.getBaseContext(), mattachfile.getDrawable()), "image/jpeg"));
-//             //  params.put("cover", new DataPart("file_cover.jpg", AppHelper.getFileDataFromDrawable(mContextgetBaseContext(), mCoverImage.getDrawable()), "image/jpeg"));
-//
-//                return params;
-//            }
-//        };
-//
-//        VolleySingleton.getInstance(mContext.getBaseContext()).addToRequestQueue(multipartRequest);
-//    }
+    private void saveProfileAccount() {
+        // loading or check internet connection or something...
+        // ... then
+        String SAVECHANGES_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/upload/";
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, SAVECHANGES_URL, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                Toast.makeText(mContext,"success",Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+error.printStackTrace();
+                        Toast.makeText(mContext,"File not Uploaded",Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("record_type" ,"PRESCRIPTION" );
+                params.put("file_name" , "filenametesting");
+                params.put("description" , "medicalstesting");
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                // file name could found file base or direct access from real path
+                // for now just get bitmap data from ImageView
+                params.put("recfile", new DataPart("file_avatar.jpg", AppHelper.getFileDataFromDrawable(mContext.getBaseContext(), mattachfile.getDrawable()), "image/jpeg"));
+             //  params.put("cover", new DataPart("file_cover.jpg", AppHelper.getFileDataFromDrawable(mContextgetBaseContext(), mCoverImage.getDrawable()), "image/jpeg"));
+
+                return params;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                String auth_token = prefs.getString("auth_token", "");
+
+                // auth_token = "ug7ri89cthuhmxf9xymeo1kwm63fa8l8  ";
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        VolleySingleton.getInstance(mContext.getBaseContext()).addToRequestQueue(multipartRequest);
+    }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item

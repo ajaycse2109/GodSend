@@ -132,7 +132,8 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
     FrameLayout f1;
     @BindView(R.id.RelLay)
     RelativeLayout mRelay;
-
+@BindView(R.id.txtPrice)
+TextView mtxtPrice;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,7 +146,9 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-mtxtNearestHospital.setInputType(0);
+
+
+        mtxtNearestHospital.setInputType(0);
 
         mLnrBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,7 +201,41 @@ getServiceId();
 
             }
         });
+mtxtNearestHospital.addTextChangedListener(new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    }
 
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+        String hosname = mtxtNearestHospital.getText().toString().substring(0,mtxtNearestHospital.getText().toString().indexOf(",")).trim();
+        for (Providers p:providersList
+                ) {
+            if(p.get_hospitalName().trim().equalsIgnoreCase(hosname.trim()))
+            {
+
+
+
+                SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString("provider_id",p.getProviderid());
+                editor.putString("provider_name", p.get_hospitalName());
+                editor.putString("provider_logo", p.getLogo());
+                editor.commit();
+            }
+        }
+        getServiceId();
+        SharedPreferences pref = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+        String price = pref.getString("service_price", "");
+        mtxtPrice.setText(price);
+
+    }
+});
         mtxtPickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,6 +249,10 @@ getServiceId();
                 }
             }
         });
+
+
+
+
 
     }
 
@@ -276,6 +317,7 @@ String prce = jsonObject.optString("price");
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
                                     editor.putString("service_id",serid);
                                     editor.putString("service_price",prce);
+                                    mtxtPrice.setText(prce);
                                     editor.commit();
 
                                 }
@@ -559,7 +601,7 @@ String prce = jsonObject.optString("price");
                         mtxtNearestHospital.setThreshold(1);
                         mtxtNearestHospital.setAdapter(Hospitaladapter);
                         mtxtNearestHospital.setTextColor(Color.BLACK);
-
+getServiceId();
                         //         appUtils.dismissProgressBar();
                     }
                 },
@@ -683,23 +725,23 @@ String prce = jsonObject.optString("price");
         mRelay.setVisibility(View.INVISIBLE);
         Toast.makeText(mContext, "Payment Successful: " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
 
-LatLng sourcell = getLocationFromAddress(mtxtPickup.getText().toString());
-LatLng destll = getLocationFromAddress(mtxtNearestHospital.getText().toString());
 
 
 
-
-        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                Uri.parse("http://maps.google.com/maps?saddr="+sourcell.latitude+","+sourcell.longitude+"&daddr="+destll.latitude+","+destll.longitude+"&mode=driving"));
+//LatLng sourcell = getLocationFromAddress(mtxtPickup.getText().toString());
+//LatLng destll = getLocationFromAddress(mtxtNearestHospital.getText().toString());
 //        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-//                Uri.parse("google.navigation:q=an+address+city"));
+//                Uri.parse("http://maps.google.com/maps?saddr="+sourcell.latitude+","+sourcell.longitude+"&daddr="+destll.latitude+","+destll.longitude+"&mode=driving"));
+////        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+////                Uri.parse("google.navigation:q=an+address+city"));
+//        startActivity(intent);
+        Intent intent = new Intent(this,RouteActivity.class);
         startActivity(intent);
 this.finish();
 //        ReviewReservationFragment fragment = new ReviewReservationFragment();
 //        getSupportFragmentManager().beginTransaction().add(R.id.FrameId, fragment).commitAllowingStateLoss();
 
-        //Intent intent = new Intent(this,MainActivity.class);
-        //   startActivityForResult(intent,100);
+
     }
 
     /**
