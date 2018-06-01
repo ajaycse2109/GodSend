@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="230dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="12dp"
@@ -20,10 +20,11 @@
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Work"
+            android:text="Mobile"
             android:textColor="@color/white"/>
 
         <TextView
+            android:id="@+id/mobtxt"
             android:textStyle="bold"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
@@ -32,6 +33,7 @@
             android:textColor="@color/white"/>
 
         <TextView
+            android:id="@+id/addtxt"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

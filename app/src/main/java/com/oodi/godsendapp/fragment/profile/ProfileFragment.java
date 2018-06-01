@@ -97,6 +97,8 @@ public class ProfileFragment extends RootFragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         mContext = getActivity();
         ButterKnife.bind(this, view);
+        profile();
+        getVitalInfo();
 
         mCardMedicalRecord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,13 +145,8 @@ public class ProfileFragment extends RootFragment {
             }
 
         });
-        mAddressAdapter = new AddressAdapter(mContext , mAddressList , this);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext , LinearLayoutManager.HORIZONTAL , false);
-        mRecAddress.setLayoutManager(layoutManager);
-        mRecAddress.setAdapter(mAddressAdapter);
-        profile();
-        getVitalInfo();
+
         return view;
     }
 
@@ -213,7 +210,10 @@ public class ProfileFragment extends RootFragment {
                         String dob = jsonObject.optString("dob");
                        String emergency_contact_name = jsonObject.optString("emergency_contact_name");
                         String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
-//mAddressList.add(address);
+                        Address add = new Address();
+                        add.setPhone(phone);
+add.setAddress(address);
+mAddressList.add(add);
                       //  mTxtName.setText(first_name);
                       //  mTxtDOB.setText(dob);
 mtxtProfName.setText( first_name+" " + last_name);
@@ -226,6 +226,13 @@ mtxtProfName.setText( first_name+" " + last_name);
                         // Log.d("PARAM::ADAP", saT.getDepartment());
 
                         editor.commit();
+
+
+                        mAddressAdapter = new AddressAdapter(getActivity() , mAddressList);
+
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext , LinearLayoutManager.HORIZONTAL , false);
+                        mRecAddress.setLayoutManager(layoutManager);
+                        mRecAddress.setAdapter(mAddressAdapter);
                      //   appUtils.dismissProgressBar();
 
                     }
@@ -293,6 +300,8 @@ public void getVitalInfo()
                     String allergies = jsonObject.optString("allergies");
                     // String emergency_contact_name = jsonObject.optString("emergency_contact_name");
                    // String emergency_contact_phone = jsonObject.optString("emergency_contact_phone");
+
+
 //mAddressList.add(address);
                     //  mTxtName.setText(first_name);
                     //  mTxtDOB.setText(dob);

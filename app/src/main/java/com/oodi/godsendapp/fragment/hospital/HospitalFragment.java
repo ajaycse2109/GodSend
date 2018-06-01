@@ -114,6 +114,8 @@ public  double longitude;
     AutoCompleteTextView mautoCompleteTextView;
     @BindView(R.id.mapView)
     MapView mMapView;
+    @BindView(R.id.loutNotFound)
+    LinearLayout mloutNotFound;
 //    @BindView(R.id.cardNearestHospital)
 //    CardView mCardNearestHospital ;
 //    @BindView(R.id.cardPreferredHospital)
@@ -200,14 +202,12 @@ if(!name.isEmpty()) {
         Providers p = providersList.get(x);
         if (p.get_hospitalName().toLowerCase().contains(name)) {
             filterlist.add(p);
+            mloutNotFound.setVisibility(View.GONE);
         }
+
     }
-//    providersList.clear();
-//
-//        for (Providers p : filterlist
-//                ) {
-//            providersList.add(p);
-//        }
+if(filterlist.size() < 1)
+    mloutNotFound.setVisibility(View.VISIBLE);
 
     mAdapter = new ProvidersAdapter((FragmentActivity) mContext, filterlist);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
@@ -217,13 +217,9 @@ if(!name.isEmpty()) {
 }
 else
 {
+    mloutNotFound.setVisibility(View.GONE);
     providersList.clear();
     prepareProvidersData();
-    mAdapter = new ProvidersAdapter((FragmentActivity) mContext, providersList);
-    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-    recyclerView.setLayoutManager(mLayoutManager);
-    recyclerView.setItemAnimator(new DefaultItemAnimator());
-    recyclerView.setAdapter(mAdapter);
 }
 
     }
@@ -233,18 +229,8 @@ else
 
     }
 });
-//        mCardNearestHospital.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FragmentTransaction transaction = getFragmentManager()
-//                        .beginTransaction();
-//                transaction.replace(R.id.root_hospital, new CScanAndTestFragment());
-//                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                transaction.addToBackStack(null);
-//                transaction.commit();
-//            }
-//        });
 
+mloutNotFound.setVisibility(View.GONE);
         mAdapter = new ProvidersAdapter((FragmentActivity)mContext,providersList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -399,7 +385,7 @@ providersList.add(0,temp);
 
 
 
-
+mloutNotFound.setVisibility(View.GONE);
                         mAdapter = new ProvidersAdapter(getActivity() , providersList);
                         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
                         recyclerView.setLayoutManager(mLayoutManager);
@@ -493,12 +479,12 @@ providersList.add(0,temp);
             return;
         }
         mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         mMap.setMyLocationEnabled(true);
         // For dropping a marker at a point on the Map
         LatLng sydney = new LatLng(latitude, longitude);
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+//        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
         //For zooming automatically to the location of the marker
         CameraPosition cameraPosition ;

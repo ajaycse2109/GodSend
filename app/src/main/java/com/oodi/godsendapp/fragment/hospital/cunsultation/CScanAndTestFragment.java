@@ -64,6 +64,8 @@ public class CScanAndTestFragment extends RootFragment implements Response.Liste
     RecyclerView mRecSaT;
     @BindView(R.id.edtSearch)
     EditText mEdtSearch;
+    @BindView(R.id.loutNotFounds)
+    LinearLayout mloutNotFound;
 
     public CScanAndTestFragment() {
         // Required empty public constructor
@@ -106,9 +108,11 @@ public class CScanAndTestFragment extends RootFragment implements Response.Liste
                         SaT p = avatarList.get(x);
                         if (p.getDepartment().toLowerCase().contains(name)) {
                             filterlist.add(p);
+                            mloutNotFound.setVisibility(View.GONE);
                         }
                     }
-
+                    if(filterlist.size() < 1)
+                        mloutNotFound.setVisibility(View.VISIBLE);
                     saTAdapter = new CSaTAdapter(getActivity() , filterlist);
                     final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
                     mRecSaT.setLayoutManager(mLayoutManager);
@@ -120,12 +124,7 @@ public class CScanAndTestFragment extends RootFragment implements Response.Liste
                 {
 
                     providers();
-                    saTAdapter = new CSaTAdapter(getActivity() , avatarList);
-                    final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                    mRecSaT.setLayoutManager(mLayoutManager);
-                    mRecSaT.setItemAnimator(new DefaultItemAnimator());
-                    mRecSaT.setAdapter(saTAdapter);
-                    mRecSaT.setNestedScrollingEnabled(false);
+
                 }
 
             }
@@ -136,10 +135,6 @@ public class CScanAndTestFragment extends RootFragment implements Response.Liste
             }
         });
 
-        saTAdapter = new CSaTAdapter(getActivity(), avatarList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-        mRecSaT.setLayoutManager(mLayoutManager);
-        mRecSaT.setAdapter(saTAdapter);
         providers();
         return view;
     }
@@ -198,6 +193,8 @@ public class CScanAndTestFragment extends RootFragment implements Response.Liste
                                 }
                             }
                         }
+                        if(avatarList.size() < 1)
+                            mloutNotFound.setVisibility(View.VISIBLE);
                         saTAdapter = new CSaTAdapter(getActivity() , avatarList);
                         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
                         mRecSaT.setLayoutManager(mLayoutManager);

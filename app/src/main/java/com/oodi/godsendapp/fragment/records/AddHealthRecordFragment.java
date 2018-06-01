@@ -100,7 +100,7 @@ public class AddHealthRecordFragment extends RootFragment {
         mBtnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                //onBackPressed();
             }
         });
 

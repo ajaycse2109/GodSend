@@ -1,4 +1,6 @@
 package com.oodi.godsendapp.activity;
+
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -25,12 +27,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,6 +52,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,10 +67,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.oodi.godsendapp.activity.GPSService;
 import com.oodi.godsend.R;
+import com.oodi.godsendapp.adapter.CSaTAdapter;
 import com.oodi.godsendapp.adapter.ProvidersAdapter;
 import com.oodi.godsendapp.fragment.hospital.ReviewReservationFragment;
 import com.oodi.godsendapp.fragment.hospital.cunsultation.CSaTReviewFragment;
 import com.oodi.godsendapp.pojo.Providers;
+import com.oodi.godsendapp.pojo.SaT;
 import com.razorpay.Checkout;
 
 import org.json.JSONArray;
@@ -69,8 +80,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -80,18 +93,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.android.volley.VolleyLog.TAG;
+
 public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    public  static  int loc;
+    public static int loc;
     public static Float minDistance = null;
     public List<Providers> providersList = new ArrayList<>();
-    public static  List<Location> locList = new ArrayList<>();
-    public static  Location source = new Location("");
-    public static  Location destination = new Location("");
+    public  List<String> mStrings = new ArrayList<String>();
+    public static List<Location> locList = new ArrayList<>();
+    public static Location source = new Location("");
+    public static Location destination = new Location("");
     public static Activity mContext;
     private GoogleMap.OnCameraIdleListener onCameraIdleListener;
     private GoogleMap mMap;
-  //  private CustomMapFragment mCustomMapFragment;
+    //  private CustomMapFragment mCustomMapFragment;
 
     private View mMarkerParentView;
     private ImageView mMarkerImageView;
@@ -104,7 +119,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
     public double latitude;
     public double longitude;
     @BindView(R.id.lnrBack)
-    LinearLayout mLnrBack ;
+    LinearLayout mLnrBack;
     @BindView(R.id.txtConfirmBooking)
     TextView mTxtConfirmBooking;
     @BindView(R.id.textView)
@@ -112,7 +127,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
     @BindView(R.id.txtPickup)
     TextView mtxtPickup;
     @BindView(R.id.txtNearestHospital)
-    TextView mtxtNearestHospital;
+    AutoCompleteTextView mtxtNearestHospital;
     @BindView(R.id.FrameId)
     FrameLayout f1;
     @BindView(R.id.RelLay)
@@ -130,6 +145,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+mtxtNearestHospital.setInputType(0);
 
         mLnrBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,15 +167,156 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         mTxtConfirmBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String hosname = mtxtNearestHospital.getText().toString().substring(0,mtxtNearestHospital.getText().toString().indexOf(","));
+                for (Providers p:providersList
+                        ) {
+                    if(p.get_hospitalName().trim().equalsIgnoreCase(hosname.trim()))
+                    {
+
+
+
+                        SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("provider_id",p.getProviderid());
+                        editor.putString("provider_name", p.get_hospitalName());
+                        editor.putString("provider_logo", p.getLogo());
+                        editor.commit();
+                    }
+                }
+getServiceId();
                 book();
                 /*Intent intent = new Intent(mContext , RouteActivity.class);
                 startActivity(intent);*/
             }
         });
 
+        mtxtNearestHospital.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mtxtNearestHospital.showDropDown();
+
+            }
+        });
+
+        mtxtPickup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent =
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                                    .build(mContext);
+                    startActivityForResult(intent, 100);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getStackTrace().toString());
+                }
+            }
+        });
+
     }
-    public  void book()
-    {
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 100){
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+//                Toast.makeText(this, "place "+place.toString(),
+//                        Toast.LENGTH_LONG).show();
+
+                mtxtPickup.setText(place.getAddress());
+                LatLng loc = place.getLatLng();
+                latitude=loc.latitude;
+                longitude=loc.longitude;
+                source.setLatitude(latitude);
+                source.setLongitude(longitude);
+
+                CameraPosition cameraPosition ;
+                cameraPosition = new CameraPosition.Builder().target(loc).zoom(15).build();
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+            }
+        }
+    }
+
+
+    private void getServiceId() {
+
+        //appUtils.showProgressBarLoading();
+        SharedPreferences prefs = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+        String pid = prefs.getString("provider_id", "");
+
+        String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/services/"+pid;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, REGISTER_URL,
+                new Response.Listener<String>() {
+
+                    public CSaTAdapter.MyViewHolder holder;
+                    @Override
+                    public void onResponse(String response) {
+                        JSONArray jsonArray = null;
+                        try {
+                            jsonArray = new JSONArray(response);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                        ArrayList<String> abcList = new ArrayList<>();
+                        for (int i = 0 ; i < jsonArray.length() ; i++) {
+                            JSONObject jsonObject = jsonArray.optJSONObject(i);
+                            String departmentname = jsonObject.optString("department");
+                            if(abcList.contains(departmentname))
+                            {}
+                            else{
+                                abcList.add(departmentname);
+
+                                if(departmentname.contains("EMERGENCY")){
+
+String serid = jsonObject.optString("id");
+String prce = jsonObject.optString("price");
+
+                                    SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString("service_id",serid);
+                                    editor.putString("service_price",prce);
+                                    editor.commit();
+
+                                }
+
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Toast.makeText(mContext , error.networkResponse.statusCode , Toast.LENGTH_LONG).show();
+                        // appUtils.dismissProgressBar();
+                    }
+                }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
+                String auth_token = prefs.getString("auth_token", "");
+                // auth_token = "324cf5c7-67f7-489e-959d-5b98ea9c8b6a";
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("auth-token", auth_token);
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        requestQueue.add(stringRequest);
+    }
+
+
+    public void book() {
         String REGISTER_URL = mContext.getResources().getString(R.string.base_url) + "api/customer/appointment/add/";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
@@ -186,7 +343,6 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
                         //String status = jsonObject.optString("status");
 
 
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -202,20 +358,28 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
 
-                SharedPreferences pref = mContext.getSharedPreferences("MY" , Context.MODE_PRIVATE);
-                String    pid = pref.getString("provider_id", "");
-                String name= pref.getString("prof_name","");
-                // String sid=pref.getString("services_id","");
-                String notes= "";
-                if(notes == null)
-                    notes="";
 
-                params.put("provider_id" , pid);
-                params.put("appointment_details" , "[{\"service_id\":"+4+", \"quantity\": 1}]");
-                params.put("booked_for" , "2018-05-09 12:00");
-                params.put("patient_name" , name);
-                params.put("note" ,notes );
-                params.put("appointment_type" , "2");
+
+
+
+                SharedPreferences pref = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+                String pid = pref.getString("provider_id", "");
+                String name = pref.getString("prof_name", "");
+                String sid=pref.getString("service_id","");
+                String notes = "";
+                if (notes == null)
+                    notes = "";
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Date now = new Date();
+                String strDate = sdf.format(now);
+
+                params.put("provider_id", pid);
+                params.put("appointment_details", "[{\"service_id\":" + sid + ", \"quantity\": 1}]");
+                params.put("booked_for", strDate);
+                params.put("patient_name", name);
+                params.put("note", notes);
+                params.put("appointment_type", "2");
                 return params;
             }
 
@@ -230,7 +394,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
                 SharedPreferences prefs = mContext.getSharedPreferences("Login", Context.MODE_PRIVATE);
                 final String auth_token = prefs.getString("auth_token", "");
 
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<String, String>();
                 params.put("auth-token", auth_token);
                 params.put("Content-Type", "application/x-www-form-urlencoded");
 
@@ -241,8 +405,8 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
-    public void getUserLocation()
-    {
+
+    public void getUserLocation() {
         // mtxtUseGPS.setImageResource(R.drawable.gps_selected);
         String address = "";
         GPSService mGPSService = new GPSService(mContext);
@@ -273,16 +437,17 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
 // make sure you close the gps after using it. Save user's battery power
         //mGPSService.closeGPS();
     }
+
     private void configureCameraIdle() {
         onCameraIdleListener = new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
                 LatLng latLng = mMap.getCameraPosition().target;
                 latitude = latLng.latitude;
-                longitude=latLng.longitude;
+                longitude = latLng.longitude;
                 Geocoder geocoder = new Geocoder(AmbulanceActivity.this);
                 try {
-                    List<Address> addressList = geocoder.getFromLocation(latitude,longitude, 1);
+                    List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
                     if (addressList != null && addressList.size() > 0) {
                         String locality = addressList.get(0).getAddressLine(0);
                         String country = addressList.get(0).getCountryName();
@@ -296,6 +461,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
             }
         };
     }
+
     public void prepareProvidersData() {
 
 
@@ -317,11 +483,12 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
                             e1.printStackTrace();
                         }
                         locList.clear();
-                        for (int i = 0 ; i < jsonArray.length() ; i++){
+                        mStrings.clear();
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.optJSONObject(i);
                             String id = jsonObject.optString("id");
                             String name = jsonObject.optString("name");
-                            String lat=jsonObject.optString("lat");
+                            String lat = jsonObject.optString("lat");
                             String lon = jsonObject.optString("lon");
                             String category = jsonObject.optString("category");
                             String phone = jsonObject.optString("phone");
@@ -331,6 +498,11 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
                             location.setLatitude(Double.parseDouble(lat));
                             location.setLongitude(Double.parseDouble(lon));
                             locList.add(location);
+
+                            GPSService gpsServices = new GPSService(mContext);
+                            String addresss= gpsServices.getLocationAddress(location);
+                            mStrings.add(name+","+addresss.replaceAll("\n",""));
+
 //globalClass.setProviderId(id);
                             Providers p = new Providers();
                             p.setName(name);
@@ -351,16 +523,14 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
 
                         }
 
-                        minDistance =source.distanceTo(locList.get(0));
-                        for(int i=1;i<locList.size();i++)
-                        {
+                        minDistance = source.distanceTo(locList.get(0));
+                        for (int i = 1; i < locList.size(); i++) {
                             destination = locList.get(i);
 
-                            Float Distance =source.distanceTo(destination);
+                            Float Distance = source.distanceTo(destination);
 
-                            if(Distance < minDistance)
-                            {
-                                minDistance =Distance;
+                            if (Distance < minDistance) {
+                                minDistance = Distance;
                                 loc = i;
                             }
 
@@ -369,12 +539,12 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
                         GPSService gpsService = new GPSService(mContext);
                         String address = gpsService.getLocationAddress(locList.get(loc));
                         String hospName = providersList.get(loc).get_hospitalName();
-                        mtxtNearestHospital.setText(hospName+" , "+address);
-                        SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY" , Context.MODE_PRIVATE);
+                        mtxtNearestHospital.setText(hospName + " , " + address.replaceAll("\n",""));
+                        SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("provider_id",providersList.get(loc).getProviderid());
-                        editor.putString("provider_name",providersList.get(loc).get_hospitalName());
-                        editor.putString("provider_logo",providersList.get(loc).getLogo());
+                        editor.putString("provider_id", providersList.get(loc).getProviderid());
+                        editor.putString("provider_name", providersList.get(loc).get_hospitalName());
+                        editor.putString("provider_logo", providersList.get(loc).getLogo());
                         editor.commit();
 //                        mAdapter = new ProvidersAdapter(getActivity() , providersList);
 //                        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -383,12 +553,12 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
 //                        recyclerView.setAdapter(mAdapter);
 //                        recyclerView.setNestedScrollingEnabled(false);
 //
-//                        String[] mStringArray = new String[mStrings.size()];
-//                        mStringArray = mStrings.toArray(mStringArray);
-//                        ArrayAdapter<String> Hospitaladapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, mStringArray);
-//                        mautoCompleteTextView.setThreshold(1);
-//                        mautoCompleteTextView.setAdapter(Hospitaladapter);
-//                        mautoCompleteTextView.setTextColor(Color.BLACK);
+                        String[] mStringArray = new String[mStrings.size()];
+                        mStringArray = mStrings.toArray(mStringArray);
+                        ArrayAdapter<String> Hospitaladapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, mStringArray);
+                        mtxtNearestHospital.setThreshold(1);
+                        mtxtNearestHospital.setAdapter(Hospitaladapter);
+                        mtxtNearestHospital.setTextColor(Color.BLACK);
 
                         //         appUtils.dismissProgressBar();
                     }
@@ -414,7 +584,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
 
                 // auth_token = "324cf5c7-67f7-489e-959d-5b98ea9c8b6a";
 
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<String, String>();
                 params.put("auth-token", auth_token);
                 params.put("Content-Type", "application/x-www-form-urlencoded");
 
@@ -425,18 +595,38 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         requestQueue.add(stringRequest);
     }
+
     public void startPayment() {
         /**
          * You need to pass current activity in order to let Razorpay create CheckoutActivity
          */
         final AmbulanceActivity activity = this;
+//        String hosname = mtxtNearestHospital.getText().toString().substring(0,mtxtNearestHospital.getText().toString().indexOf(","));
+//String name="",logo="";
+//        for (Providers p:providersList
+//             ) {
+//
+//            if(p.get_hospitalName().trim().equalsIgnoreCase(hosname.trim()))
+//            {
+//                name=p.get_hospitalName();
+//                logo = p.getLogo();
+//                SharedPreferences sharedpreferences = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedpreferences.edit();
+//                editor.putString("provider_id",p.getProviderid());
+//                editor.putString("provider_name", p.get_hospitalName());
+//                editor.putString("provider_logo", p.getLogo());
+//                editor.commit();
+//            }
+//        }
 
         final Checkout co = new Checkout();
 
         try {
-            SharedPreferences pref = this.getSharedPreferences("MY" , Context.MODE_PRIVATE);
-            String name  = pref.getString("provider_name","");
+
+            SharedPreferences pref = mContext.getSharedPreferences("MY", Context.MODE_PRIVATE);
             String logo = pref.getString("provider_logo", "");
+            String name = pref.getString("provider_name", "");
+            String amt = pref.getString("service_price","")+"00";
 
             JSONObject options = new JSONObject();
             options.put("name", name);
@@ -444,7 +634,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
             //You can omit the image option to fetch the image from dashboard
             options.put("image", logo);
             options.put("currency", "INR");
-            options.put("amount", "1000000");
+            options.put("amount", amt);
             JSONObject preFill = new JSONObject();
             preFill.put("email", "");
             preFill.put("contact", "");
@@ -458,6 +648,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
             e.printStackTrace();
         }
     }
+
     /**
      * The name of the function has to be
      * onPaymentSuccess
@@ -465,16 +656,52 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
      */
     @SuppressWarnings("unused")
 
+    public LatLng getLocationFromAddress(String address)
+    {
+        LatLng latLng=null;
+        Geocoder coder = new Geocoder(this);
+        List<Address> addresses;
+        try {
+            addresses = coder.getFromLocationName(address, 5);
+            if (addresses == null) {
+            }
+            Address location = addresses.get(0);
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+            Log.i("Lat",""+lat);
+            Log.i("Lng",""+lng);
+            latLng = new LatLng(lat,lng);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return latLng;
+    }
+
+
     public void onPaymentSuccess(String razorpayPaymentID) {
 
         mRelay.setVisibility(View.INVISIBLE);
         Toast.makeText(mContext, "Payment Successful: " + razorpayPaymentID, Toast.LENGTH_SHORT).show();
-        ReviewReservationFragment fragment = new ReviewReservationFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.FrameId,fragment).commitAllowingStateLoss();
+
+LatLng sourcell = getLocationFromAddress(mtxtPickup.getText().toString());
+LatLng destll = getLocationFromAddress(mtxtNearestHospital.getText().toString());
+
+
+
+
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?saddr="+sourcell.latitude+","+sourcell.longitude+"&daddr="+destll.latitude+","+destll.longitude+"&mode=driving"));
+//        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+//                Uri.parse("google.navigation:q=an+address+city"));
+        startActivity(intent);
+this.finish();
+//        ReviewReservationFragment fragment = new ReviewReservationFragment();
+//        getSupportFragmentManager().beginTransaction().add(R.id.FrameId, fragment).commitAllowingStateLoss();
 
         //Intent intent = new Intent(this,MainActivity.class);
         //   startActivityForResult(intent,100);
     }
+
     /**
      * The name of the function has to be
      * onPaymentError
@@ -488,18 +715,8 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
             Log.e(TAG, "Exception in onPaymentError", e);
         }
     }
-   /* private void configureCameraIdle() {
-        onCameraIdleListener = new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
 
-                LatLng latLng = mMap.getCameraPosition().target;
-                latitude = latLng.latitude;
-                longitude=latLng.longitude;
-               // Geocoder geocoder = new Geocoder(MapsActivity.this);
-            }
-        };
-    }*/
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -514,6 +731,19 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
         mMap = googleMap;
         LatLng sydney = new LatLng(latitude, longitude);
         mMap.setOnCameraIdleListener(onCameraIdleListener);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
           /*  mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
@@ -523,7 +753,7 @@ public class AmbulanceActivity extends FragmentActivity implements OnMapReadyCal
 
         //For zooming automatically to the location of the marker
         CameraPosition cameraPosition ;
-        cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+        cameraPosition = new CameraPosition.Builder().target(sydney).zoom(18).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override

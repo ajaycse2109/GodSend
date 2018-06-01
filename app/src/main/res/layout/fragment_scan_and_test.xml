@@ -43,10 +43,36 @@
         android:background="@color/bg" />-->
 
     <android.support.v7.widget.RecyclerView
-        android:paddingTop="8dp"
+        android:id="@+id/recSaT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:paddingBottom="8dp"
+        android:paddingTop="8dp"></android.support.v7.widget.RecyclerView>
+
+
+    <LinearLayout
+        android:id="@+id/loutNotFounds"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recSaT"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:src="@drawable/notfound" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Departments Not Found"
+            android:textColor="@color/black" />
+
+
+    </LinearLayout>
+
 
 </LinearLayout>

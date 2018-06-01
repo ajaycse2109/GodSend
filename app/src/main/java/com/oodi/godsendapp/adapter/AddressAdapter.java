@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.oodi.godsend.R;
 import com.oodi.godsendapp.fragment.profile.ProfileFragment;
 import com.oodi.godsendapp.pojo.Address;
+import com.oodi.godsendapp.pojo.SaT;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.MyViewHo
     List<Address> mAddressList;
     ProfileFragment profileFragment;
 
-    public AddressAdapter(Activity mContext,  List<Address> mAddressList, ProfileFragment profileFragment) {
+    public AddressAdapter(Activity mContext,  List<Address> mAddressList) {
         this.mContext = mContext ;
         this.mAddressList = mAddressList ;
         this.profileFragment = profileFragment;
@@ -31,12 +32,13 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtFloor;
+        TextView mmobtxt,maddtxt;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            txtFloor = itemView.findViewById(R.id.txtFloor);
+            mmobtxt = itemView.findViewById(R.id.mobtxt);
+            maddtxt = itemView.findViewById(R.id.addtxt);
 
         }
     }
@@ -57,24 +59,15 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.MyViewHo
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction transaction = wayFindingFragment.getFragmentManager()
-                        .beginTransaction();
-                transaction.replace(R.id.root_hospital, new CScanAndTestDetailsFragment());
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });*/
-
+        final Address address = mAddressList.get(position);
+        holder.mmobtxt.setText(address.getPhone());
+        holder.maddtxt.setText(address.getAddress());
     }
 
     @Override
     public int getItemCount() {
-        //return mAddressList.size();
-        return 3;
+        return mAddressList.size();
+        //return 3;
     }
 
 

@@ -11,6 +11,17 @@ public class Providers {
     public String lon;
     public  String distance;
     public  String time;
+    public  String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+
 
     public String getTime() {
         return time;
