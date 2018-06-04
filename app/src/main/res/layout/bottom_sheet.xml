@@ -24,7 +24,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:padding="5dp"
-                android:src="@drawable/prescriptionp" />
+                android:src="@drawable/prescription" />
 
             <TextView
                 android:id="@+id/txtPrescription"

@@ -556,7 +556,7 @@ error.printStackTrace();
 
             @Override
             public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=UTF-8";
+                return " application/x-www-form-urlencoded";
             }
 
             @Override

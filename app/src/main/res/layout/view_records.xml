@@ -53,17 +53,17 @@
         </LinearLayout>
 
         <ImageView
-            android:src="@drawable/delete"
-            android:layout_gravity="center"
             android:layout_width="26dp"
-            android:layout_height="25dp" />
+            android:layout_height="39dp"
+            android:layout_gravity="center"
+            android:src="@drawable/delete" />
 
         <ImageView
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/editbutton"
+            android:layout_width="21dp"
+            android:layout_height="25dp"
             android:layout_gravity="center"
-            android:layout_width="25dp"
-            android:layout_height="25dp" />
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/editbutton" />
 
     </LinearLayout>
 
